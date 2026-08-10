@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 대시보드 | 가온방문요양·방문목욕 센터</title>
+    <title>관리자 대시보드 | 가온복지센터</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
     <!-- Admin Top Navigation -->
     <header class="admin-navbar">
         <a href="#" class="logo-text" style="font-family: var(--font-warm); font-weight: 700; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-hand-holding-heart"></i> 가온 <span>관리자 시스템</span>
+            <i class="fa-solid fa-hand-holding-heart"></i> 가온복지센터 <span>관리자 시스템</span>
         </a>
         <div class="admin-nav-actions">
             <span style="font-size: 0.9rem; color: var(--color-primary-light); font-weight: 500;"><i class="fa-solid fa-user-shield"></i> 최고관리자 모드</span>
@@ -128,7 +128,7 @@
                                     <label for="setAgencyName" class="form-label">기관명</label>
                                     <div class="input-wrapper">
                                         <i class="fa-solid fa-hospital input-icon"></i>
-                                        <input type="text" id="setAgencyName" class="form-input" placeholder="예) 가온방문요양·방문목욕 센터" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                        <input type="text" id="setAgencyName" class="form-input" placeholder="예) 가온복지센터" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -288,7 +288,7 @@
                             <label for="setGreetingTitle" class="form-label">인사말 제목</label>
                             <div class="input-wrapper">
                                 <i class="fa-solid fa-heading input-icon"></i>
-                                <input type="text" id="setGreetingTitle" class="form-input" placeholder="예) 어르신의 행복한 노후, 가온이 든든한 동반자가 되겠습니다." required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                <input type="text" id="setGreetingTitle" class="form-input" placeholder="예) 어르신의 행복한 노후, 가온복지센터가 든든한 동반자가 되겠습니다." required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
                             </div>
                         </div>
                         <div class="form-group">
@@ -326,11 +326,11 @@
                             <label for="setHistoryText" class="form-label">연혁 항목 목록</label>
                             <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 8px; line-height: 1.4;">
                                 * 한 줄에 하나의 연혁 항목을 입력해주세요.<br>
-                                * 형식: <strong>년도.월 - 내용</strong> (예: 2026.03 - 가온센터 설립)
+                                * 형식: <strong>년도.월 - 내용</strong> (예: 2026.03 - 가온복지센터 설립)
                             </p>
                             <div class="input-wrapper">
                                 <i class="fa-solid fa-list-ul input-icon" style="top: 15px;"></i>
-                                <textarea id="setHistoryText" class="form-input" placeholder="예)&#10;2026.03 - 가온방문요양센터 설립&#10;2026.05 - 장기요양기관 지정" required style="padding-left: 44px; padding-top: 12px; height: 150px; resize: vertical; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.6;"></textarea>
+                                <textarea id="setHistoryText" class="form-input" placeholder="예)&#10;2026.03 - 가온복지센터 설립&#10;2026.05 - 장기요양기관 지정" required style="padding-left: 44px; padding-top: 12px; height: 150px; resize: vertical; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.6;"></textarea>
                             </div>
                         </div>
                         <button type="submit" class="btn-submit" style="margin-top: 10px; width: 100%;"><i class="fa-solid fa-circle-check"></i> 연혁 정보 저장</button>
@@ -400,7 +400,7 @@
     <footer class="main-footer" style="padding-bottom: 0;">
         <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.05); padding: 20px 0;">
             <div class="container">
-                <p class="copyright">&copy; 2026 가온방문요양·방문목욕 센터 - 관리자 모드. All Rights Reserved.</p>
+                <p class="copyright">&copy; 2026 가온복지센터 - 관리자 모드. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
@@ -408,6 +408,41 @@
     <!-- Simple Custom Admin Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Migration: Replace old brand name references in localStorage with '가온복지센터'
+            try {
+                const rawSettings = localStorage.getItem('gaon_settings');
+                if (rawSettings) {
+                    let settings = JSON.parse(rawSettings);
+                    let changed = false;
+                    
+                    if (settings.agencyName === '가온' || settings.agencyName === '가온방문요양/방문목욕' || !settings.agencyName) {
+                        settings.agencyName = '가온복지센터';
+                        changed = true;
+                    }
+                    
+                    for (let key in settings) {
+                        if (typeof settings[key] === 'string') {
+                            const original = settings[key];
+                            let replaced = original
+                                .replace(/가온방문요양\/방문목욕/g, '가온복지센터')
+                                .replace(/가온이/g, '가온복지센터가')
+                                .replace(/가온은/g, '가온복지센터는')
+                                .replace(/가온의/g, '가온복지센터의')
+                                .replace(/가온에는/g, '가온복지센터에는');
+                            
+                            if (replaced !== original) {
+                                settings[key] = replaced;
+                                changed = true;
+                            }
+                        }
+                    }
+                    if (changed) {
+                        localStorage.setItem('gaon_settings', JSON.stringify(settings));
+                    }
+                }
+            } catch (e) {
+                console.error('Migration failed:', e);
+            }
             // Update time
             const timeSpan = document.getElementById('currentTime');
             if (timeSpan) {
@@ -447,7 +482,7 @@
             const defaultReviewsData = [
                 { name: '김○○ 보호자', relation: '어머니 (85세, 방문요양)', stars: '5', text: '처음에는 낯선 분이 집에 오시는 게 걱정됐는데, 요양보호사 선생님이 워낙 친절하고 세심하게 어머니를 돌봐주셔서 이제는 어머니가 먼저 기다리세요. 정말 감사합니다.' },
                 { name: '이○○ 보호자', relation: '아버지 (79세, 방문목욕)', stars: '5', text: '혼자 모시기 힘들었던 목욕 도움을 전문적으로 해주셔서 너무 편안했습니다. 아버지가 기분 좋게 목욕하신 모습을 보니 보호자로서 마음이 놓였습니다.' },
-                { name: '박○○ 보호자', relation: '장모님 (91세, 방문요양)', stars: '5', text: '등급 신청부터 서비스 연결까지 모든 과정을 친절하게 도와주셨어요. 복잡한 서류 절차를 혼자 했더라면 포기했을 텐데 가온 덕분에 잘 해결했습니다.' }
+                { name: '박○○ 보호자', relation: '장모님 (91세, 방문요양)', stars: '5', text: '등급 신청부터 서비스 연결까지 모든 과정을 친절하게 도와주셨어요. 복잡한 서류 절차를 혼자 했더라면 포기했을 텐데 가온복지센터 덕분에 잘 해결했습니다.' }
             ];
             const defaultGalleryData = [
                 { url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80', caption: '노인장기요양기관 지정 인증서' },
@@ -457,15 +492,15 @@
             const defaultFaqData = [
                 { 
                     q: '요양보호사 선생님이 어르신과 맞지 않으면 변경이 가능한가요?', 
-                    a: '네, 물론입니다. 가온은 어르신과 요양보호사 간의 정서적 유대감과 매칭 상태를 가장 중요하게 생각합니다. 서비스를 이용하시다가 불편하시거나 성향이 맞지 않는다고 판단되시면, 언제든 센터의 담당 사회복지사에게 말씀해 주세요. 추가 비용 없이 신속하고 원만하게 다른 요양보호사 선생님으로 재매칭해 드립니다.' 
+                    a: '네, 물론입니다. 가온복지센터는 어르신과 요양보호사 간의 정서적 유대감과 매칭 상태를 가장 중요하게 생각합니다. 서비스를 이용하시다가 불편하시거나 성향이 맞지 않는다고 판단되시면, 언제든 센터의 담당 사회복지사에게 말씀해 주세요. 추가 비용 없이 신속하고 원만하게 다른 요양보호사 선생님으로 재매칭해 드립니다.' 
                 },
                 { 
                     q: '요양 서비스 도중 사고나 부상이 발생하면 어떻게 처리되나요?', 
-                    a: '가온방문요양센터의 모든 요양보호사 선생님들은 100% 전문인 배상책임보험에 가입되어 있습니다. 혹시라도 돌봄 서비스 진행 중 어르신께 안전사고나 재산상 손해가 발생할 경우, 책임지고 가입된 보험을 통해 전액 신속히 보상 및 처리해 드립니다. 안심하고 신뢰하며 서비스를 맡기셔도 좋습니다.' 
+                    a: '가온복지센터의 모든 요양보호사 선생님들은 100% 전문인 배상책임보험에 가입되어 있습니다. 혹시라도 돌봄 서비스 진행 중 어르신께 안전사고나 재산상 손해가 발생할 경우, 책임지고 가입된 보험을 통해 전액 신속히 보상 및 처리해 드립니다. 안심하고 신뢰하며 서비스를 맡기셔도 좋습니다.' 
                 },
                 { 
                     q: '남성 어르신인데 남성 요양보호사 선생님께 서비스를 받을 수 있나요?', 
-                    a: '네, 가능합니다. 가온에는 다수의 우수한 남성 요양보호사 선생님들도 근무하고 계십니다. 신체활동 및 목욕 지원 시 발생할 수 있는 남성 어르신의 신체적 정서적 수치심을 최소화하고 보다 편안한 케어를 받으실 수 있도록 어르신의 요구와 성별에 맞춰 섬세하게 매칭을 진행해 드립니다.' 
+                    a: '네, 가능합니다. 가온복지센터에는 다수의 우수한 남성 요양보호사 선생님들도 근무하고 계십니다. 신체활동 및 목욕 지원 시 발생할 수 있는 남성 어르신의 신체적 정서적 수치심을 최소화하고 보다 편안한 케어를 받으실 수 있도록 어르신의 요구와 성별에 맞춰 섬세하게 매칭을 진행해 드립니다.' 
                 },
                 { 
                     q: '주말이나 야간, 공휴일에도 서비스를 제공하나요?', 
@@ -854,7 +889,7 @@
             function initSettingsForms() {
                 // Settings Form
                 const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                agencyNameInput.value = settings.agencyName || '';
+                agencyNameInput.value = settings.agencyName || '가온복지센터';
                 ownerInput.value = settings.owner || '';
                 phoneInput.value = settings.phone || '';
                 designationInput.value = settings.designation || '';
@@ -870,16 +905,16 @@
                 snsYoutubeInput.value = settings.snsYoutube || '';
 
                 // Greetings Form Init
-                greetingTitleInput.value = settings.greetingTitle !== undefined ? settings.greetingTitle : '어르신의 행복한 노후, 가온이 든든한 동반자가 되겠습니다.';
+                greetingTitleInput.value = settings.greetingTitle !== undefined ? settings.greetingTitle : '어르신의 행복한 노후, 가온복지센터가 든든한 동반자가 되겠습니다.';
                 
-                const defaultGreeting = `안녕하십니까?\n가온방문요양·방문목욕 센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온은 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
+                const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
                 greetingContentInput.value = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
                 
                 greetingPositionInput.value = settings.greetingPosition !== undefined ? settings.greetingPosition : '센터장';
                 greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '홍길동');
 
                 // History Form Init
-                const defaultHistory = `2026.03 - 가온방문요양·방문목욕 센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
+                const defaultHistory = `2026.03 - 가온복지센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
                 historyTextInput.value = settings.historyText !== undefined ? settings.historyText : defaultHistory;
 
                 // Calculator Form

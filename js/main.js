@@ -1,5 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Migration: Replace old brand name references in localStorage with '가온복지센터'
+    try {
+        const rawSettings = localStorage.getItem('gaon_settings');
+        if (rawSettings) {
+            let settings = JSON.parse(rawSettings);
+            let changed = false;
+            
+            if (settings.agencyName === '가온' || settings.agencyName === '가온방문요양/방문목욕' || !settings.agencyName) {
+                settings.agencyName = '가온복지센터';
+                changed = true;
+            }
+            
+            for (let key in settings) {
+                if (typeof settings[key] === 'string') {
+                    const original = settings[key];
+                    let replaced = original
+                        .replace(/가온방문요양\/방문목욕/g, '가온복지센터')
+                        .replace(/가온이/g, '가온복지센터가')
+                        .replace(/가온은/g, '가온복지센터는')
+                        .replace(/가온의/g, '가온복지센터의')
+                        .replace(/가온에는/g, '가온복지센터에는');
+                    
+                    if (replaced !== original) {
+                        settings[key] = replaced;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed) {
+                localStorage.setItem('gaon_settings', JSON.stringify(settings));
+            }
+        }
+    } catch (e) {
+        console.error('Migration failed:', e);
+    }
+
     /* ==========================================================================
        0. Load Site Configurations from LocalStorage
        ========================================================================== */
@@ -14,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 기관명
         const footerAgencyName = document.getElementById('footerAgencyName');
-        if (footerAgencyName) footerAgencyName.textContent = settings.agencyName || '';
+        if (footerAgencyName) footerAgencyName.textContent = settings.agencyName || '가온복지센터';
         
         // 대표자명
         const footerOwner = document.getElementById('footerOwner');
@@ -78,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 기관장 인사말 설정 로드
         const greetingTitle = document.getElementById('greetingTitle');
-        if (greetingTitle) greetingTitle.textContent = settings.greetingTitle || '어르신의 행복한 노후, 가온이 든든한 동반자가 되겠습니다.';
+        if (greetingTitle) greetingTitle.textContent = settings.greetingTitle || '어르신의 행복한 노후, 가온복지센터가 든든한 동반자가 되겠습니다.';
         
         const greetingPosition = document.getElementById('greetingPosition');
         if (greetingPosition) greetingPosition.textContent = settings.greetingPosition || '센터장';
@@ -88,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const greetingText = document.getElementById('greetingText');
         if (greetingText) {
-            const defaultGreeting = `안녕하십니까?\n가온방문요양·방문목욕 센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온은 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
+            const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
             const rawContent = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
             const paragraphs = rawContent.split(/\n+/).filter(p => p.trim() !== '');
             greetingText.innerHTML = paragraphs.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
@@ -97,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 기관 연혁 로드 및 렌더링
         const historyTimeline = document.getElementById('historyTimeline');
         if (historyTimeline) {
-            const defaultHistory = `2026.03 - 가온방문요양·방문목욕 센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
+            const defaultHistory = `2026.03 - 가온복지센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
             const rawHistory = settings.historyText !== undefined ? settings.historyText : defaultHistory;
             const lines = rawHistory.split('\n').filter(line => line.trim() !== '');
             
@@ -132,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const defaultReviews = [
                 { name: '김○○ 보호자', relation: '어머니 (85세, 방문요양)', stars: 5, text: '처음에는 낯선 분이 집에 오시는 게 걱정됐는데, 요양보호사 선생님이 워낙 친절하고 세심하게 어머니를 돌봐주셔서 이제는 어머니가 먼저 기다리세요. 정말 감사합니다.' },
                 { name: '이○○ 보호자', relation: '아버지 (79세, 방문목욕)', stars: 5, text: '혼자 모시기 힘들었던 목욕 도움을 전문적으로 해주셔서 너무 편안했습니다. 아버지가 기분 좋게 목욕하신 모습을 보니 보호자로서 마음이 놓였습니다.' },
-                { name: '박○○ 보호자', relation: '장모님 (91세, 방문요양)', stars: 5, text: '등급 신청부터 서비스 연결까지 모든 과정을 친절하게 도와주셨어요. 복잡한 서류 절차를 혼자 했더라면 포기했을 텐데 가온 덕분에 잘 해결했습니다.' }
+                { name: '박○○ 보호자', relation: '장모님 (91세, 방문요양)', stars: 5, text: '등급 신청부터 서비스 연결까지 모든 과정을 친절하게 도와주셨어요. 복잡한 서류 절차를 혼자 했더라면 포기했을 텐데 가온복지센터 덕분에 잘 해결했습니다.' }
             ];
             let reviewsData;
             try { reviewsData = settings.reviews ? JSON.parse(settings.reviews) : defaultReviews; }
@@ -221,15 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const defaultFaq = [
                 { 
                     q: '요양보호사 선생님이 어르신과 맞지 않으면 변경이 가능한가요?', 
-                    a: '네, 물론입니다. 가온은 어르신과 요양보호사 간의 정서적 유대감과 매칭 상태를 가장 중요하게 생각합니다. 서비스를 이용하시다가 불편하시거나 성향이 맞지 않는다고 판단되시면, 언제든 센터의 담당 사회복지사에게 말씀해 주세요. 추가 비용 없이 신속하고 원만하게 다른 요양보호사 선생님으로 재매칭해 드립니다.' 
+                    a: '네, 물론입니다. 가온복지센터는 어르신과 요양보호사 간의 정서적 유대감과 매칭 상태를 가장 중요하게 생각합니다. 서비스를 이용하시다가 불편하시거나 성향이 맞지 않는다고 판단되시면, 언제든 센터의 담당 사회복지사에게 말씀해 주세요. 추가 비용 없이 신속하고 원만하게 다른 요양보호사 선생님으로 재매칭해 드립니다.' 
                 },
                 { 
                     q: '요양 서비스 도중 사고나 부상이 발생하면 어떻게 처리되나요?', 
-                    a: '가온방문요양센터의 모든 요양보호사 선생님들은 100% 전문인 배상책임보험에 가입되어 있습니다. 혹시라도 돌봄 서비스 진행 중 어르신께 안전사고나 재산상 손해가 발생할 경우, 책임지고 가입된 보험을 통해 전액 신속히 보상 및 처리해 드립니다. 안심하고 신뢰하며 서비스를 맡기셔도 좋습니다.' 
+                    a: '가온복지센터의 모든 요양보호사 선생님들은 100% 전문인 배상책임보험에 가입되어 있습니다. 혹시라도 돌봄 서비스 진행 중 어르신께 안전사고나 재산상 손해가 발생할 경우, 책임지고 가입된 보험을 통해 전액 신속히 보상 및 처리해 드립니다. 안심하고 신뢰하며 서비스를 맡기셔도 좋습니다.' 
                 },
                 { 
                     q: '남성 어르신인데 남성 요양보호사 선생님께 서비스를 받을 수 있나요?', 
-                    a: '네, 가능합니다. 가온에는 다수의 우수한 남성 요양보호사 선생님들도 근무하고 계십니다. 신체활동 및 목욕 지원 시 발생할 수 있는 남성 어르신의 신체적 정서적 수치심을 최소화하고 보다 편안한 케어를 받으실 수 있도록 어르신의 요구와 성별에 맞춰 섬세하게 매칭을 진행해 드립니다.' 
+                    a: '네, 가능합니다. 가온복지센터에는 다수의 우수한 남성 요양보호사 선생님들도 근무하고 계십니다. 신체활동 및 목욕 지원 시 발생할 수 있는 남성 어르신의 신체적 정서적 수치심을 최소화하고 보다 편안한 케어를 받으실 수 있도록 어르신의 요구와 성별에 맞춰 섬세하게 매칭을 진행해 드립니다.' 
                 },
                 { 
                     q: '주말이나 야간, 공휴일에도 서비스를 제공하나요?', 
