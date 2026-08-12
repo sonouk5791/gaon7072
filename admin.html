@@ -387,11 +387,11 @@
 
                 <!-- Card 4: FAQ -->
                 <div class="admin-card">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-circle-question"></i> FAQ 관리</h2>
+                    <h2 class="admin-card-title"><i class="fa-solid fa-circle-question"></i> 문의사항 관리</h2>
                     <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:16px;">질문(Q)과 답변(A)을 입력하세요. 헤드라인 클릭 시 펼치는 아코디언 방식으로 표시됩니다.</p>
                     <div class="content-rows-container" id="faqRows"></div>
-                    <button class="btn-add-row" id="addFaqBtn" type="button"><i class="fa-solid fa-plus"></i> FAQ 추가</button>
-                    <button type="button" class="btn-submit" id="saveFaqBtn" style="margin-top:14px;width:100%;"><i class="fa-solid fa-circle-check"></i> FAQ 목록 저장</button>
+                    <button class="btn-add-row" id="addFaqBtn" type="button"><i class="fa-solid fa-plus"></i> 문의사항 추가</button>
+                    <button type="button" class="btn-submit" id="saveFaqBtn" style="margin-top:14px;width:100%;"><i class="fa-solid fa-circle-check"></i> 문의사항 목록 저장</button>
                 </div>
 
             </div>
@@ -708,7 +708,7 @@
                 const s = JSON.parse(localStorage.getItem('gaon_settings')) || {};
                 s.faq = JSON.stringify(data);
                 localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('FAQ 목록 및 이용자 답변이 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
+                alert('문의사항 목록 및 이용자 답변이 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
             });
 
 
