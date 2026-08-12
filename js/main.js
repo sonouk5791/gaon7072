@@ -1,36 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Migration: Replace old brand name references in localStorage with '가온복지센터'
+    // Migration: Replace old brand name references and update address/service areas in localStorage
     try {
         const rawSettings = localStorage.getItem('gaon_settings');
-        if (rawSettings) {
-            let settings = JSON.parse(rawSettings);
-            let changed = false;
-            
-            if (settings.agencyName === '가온' || settings.agencyName === '가온방문요양/방문목욕' || !settings.agencyName) {
-                settings.agencyName = '가온복지센터';
-                changed = true;
-            }
-            
-            for (let key in settings) {
-                if (typeof settings[key] === 'string') {
-                    const original = settings[key];
-                    let replaced = original
-                        .replace(/가온방문요양\/방문목욕/g, '가온복지센터')
-                        .replace(/가온이/g, '가온복지센터가')
-                        .replace(/가온은/g, '가온복지센터는')
-                        .replace(/가온의/g, '가온복지센터의')
-                        .replace(/가온에는/g, '가온복지센터에는');
-                    
-                    if (replaced !== original) {
-                        settings[key] = replaced;
-                        changed = true;
-                    }
+        let settings = rawSettings ? JSON.parse(rawSettings) : {};
+        let changed = false;
+        
+        if (settings.agencyName === '가온' || settings.agencyName === '가온방문요양/방문목욕' || !settings.agencyName) {
+            settings.agencyName = '가온복지센터';
+            changed = true;
+        }
+        
+        if (settings.address !== '전북특별자치도 부안군 부안읍 용계길 13번지 2호') {
+            settings.address = '전북특별자치도 부안군 부안읍 용계길 13번지 2호';
+            changed = true;
+        }
+        
+        if (settings.mapAddress !== '전북특별자치도 부안군 부안읍 용계길 13번지 2호') {
+            settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13번지 2호';
+            changed = true;
+        }
+        
+        const targetAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
+        if (settings.serviceAreas !== targetAreas) {
+            settings.serviceAreas = targetAreas;
+            changed = true;
+        }
+        
+        for (let key in settings) {
+            if (typeof settings[key] === 'string') {
+                const original = settings[key];
+                let replaced = original
+                    .replace(/가온방문요양\/방문목욕/g, '가온복지센터')
+                    .replace(/가온이/g, '가온복지센터가')
+                    .replace(/가온은/g, '가온복지센터는')
+                    .replace(/가온의/g, '가온복지센터의')
+                    .replace(/가온에는/g, '가온복지센터에는');
+                
+                if (replaced !== original) {
+                    settings[key] = replaced;
+                    changed = true;
                 }
             }
-            if (changed) {
-                localStorage.setItem('gaon_settings', JSON.stringify(settings));
-            }
+        }
+        if (changed || !rawSettings) {
+            localStorage.setItem('gaon_settings', JSON.stringify(settings));
         }
     } catch (e) {
         console.error('Migration failed:', e);
@@ -114,7 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 기관장 인사말 설정 로드
         const greetingTitle = document.getElementById('greetingTitle');
-        if (greetingTitle) greetingTitle.textContent = settings.greetingTitle || '어르신의 행복한 노후, 가온복지센터가 든든한 동반자가 되겠습니다.';
+        let titleText = settings.greetingTitle || '어르신의 행복한 노후<br>가온복지센터가 든든한 동반자가 되겠습니다.';
+        if (titleText === '어르신의 행복한 노후, 가온복지센터가 든든한 동반자가 되겠습니다.') {
+            titleText = '어르신의 행복한 노후<br>가온복지센터가 든든한 동반자가 되겠습니다.';
+        }
+        if (greetingTitle) greetingTitle.innerHTML = titleText.replace(/\n/g, '<br>');
         
         const greetingPosition = document.getElementById('greetingPosition');
         if (greetingPosition) greetingPosition.textContent = settings.greetingPosition || '센터장';
@@ -233,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mapEmbed = document.getElementById('mapEmbed');
         const mapAddressText = document.getElementById('mapAddressText');
         const serviceAreaTags = document.getElementById('serviceAreaTags');
-        const defaultAddress = '서울특별시 강남구 테헤란로 152';
+        const defaultAddress = '전북특별자치도 부안군 부안읍 용계길 13번지 2호';
         const mapAddress = settings.mapAddress || defaultAddress;
         if (mapAddressText) mapAddressText.textContent = mapAddress;
         if (mapEmbed) {
@@ -241,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mapEmbed.src = `https://maps.google.com/maps?q=${encodedAddr}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
         }
         if (serviceAreaTags) {
-            const defaultAreas = '강남구\n서초구\n송파구\n강동구\n광진구';
+            const defaultAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
             const rawAreas = settings.serviceAreas || defaultAreas;
             serviceAreaTags.innerHTML = rawAreas.split('\n')
                 .map(a => a.trim()).filter(a => a)
@@ -265,15 +283,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 { 
                     q: '남성 어르신인데 남성 요양보호사 선생님께 서비스를 받을 수 있나요?', 
-                    a: '네, 가능합니다. 가온복지센터에는 다수의 우수한 남성 요양보호사 선생님들도 근무하고 계십니다. 신체활동 및 목욕 지원 시 발생할 수 있는 남성 어르신의 신체적 정서적 수치심을 최소화하고 보다 편안한 케어를 받으실 수 있도록 어르신의 요구와 성별에 맞춰 섬세하게 매칭을 진행해 드립니다.' 
-                },
-                { 
-                    q: '주말이나 야간, 공휴일에도 서비스를 제공하나요?', 
-                    a: '네, 가능합니다. 장기요양보험 지원 범위 내에서 가족의 필요 및 주야간 부재 상황에 맞춰 주말 및 야간 근무 시간대를 사전에 조율하여 서비스를 제공해 드립니다. 다만, 국민건강보험공단 고시 단가 기준에 따라 야간(22시~06시), 휴일 및 주말 근무 시에는 일정 비율의 가산 수가가 발생할 수 있습니다.' 
+                    a: '현재 전국의 요양보호사 인력 중 남성 요양보호사의 비율이 매우 낮아, 남성 요양보호사 매칭은 현실적으로 쉽지 않으며 대기 시간이 오래 걸리거나 즉각적인 매칭이 어려울 수 있습니다. 사전에 센터로 문의해 주시면 당시 인력 현황을 확인하여 최대한 안내와 조정을 도와드리겠습니다.' 
                 },
                 { 
                     q: '요양등급이 아직 없는데 가온복지센터 서비스를 즉시 이용할 수 있나요?', 
-                    a: '네, 가능합니다. 노인장기요양 등급이 없으신 경우, 가온복지센터의 전담 사회복지사가 국민건강보험공단 등급 신청 서류 작성부터 공단 직원의 방문 조사 대비 안내, 의사소견서 발급 동행 등 등급 판정 전 과정의 행정 절차를 100% 무료로 대행하여 최단기간 내 등급을 받으실 수 있도록 적극 도와드립니다. 등급 판정 전에도 일반 유료 요양 서비스 이용이 가능하니 우선 편하게 문의 주십시오.' 
+                    a: '국가지원(노인장기요양보험)을 통한 방문요양 및 방문목욕 서비스는 장기요양등급을 판정받으신 어르신만 이용이 가능하므로, 등급 없이는 즉각적인 국가지원 서비스 이용이 불가능합니다. 다만, 가온복지센터에서 등급 신청 서류 준비 및 신청 상담 등을 상세히 지원해 드리고 있으니, 등급이 없으시더라도 먼저 센터로 연락 주시면 등급 신청 절차를 친절히 안내해 드리겠습니다.' 
                 },
                 { 
                     q: '방문요양 한 달 예상 서비스 비용은 대략 어떻게 되나요?', 
@@ -283,15 +297,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let faqData;
             try { 
-                faqData = currentSettings.faq ? JSON.parse(currentSettings.faq) : defaultFaq; 
-                // 만약 기존에 저장된 데이터의 항목 수가 새로 보강된 6개보다 적다면 기본값으로 즉각 업데이트
-                if (currentSettings.faq && JSON.parse(currentSettings.faq).length < defaultFaq.length) {
-                    faqData = defaultFaq;
-                    currentSettings.faq = JSON.stringify(defaultFaq);
-                    localStorage.setItem('gaon_settings', JSON.stringify(currentSettings));
-                }
+                let storedFaq = currentSettings.faq ? JSON.parse(currentSettings.faq) : defaultFaq; 
+                faqData = storedFaq
+                    .filter(item => !item.q.includes('주말') && !item.q.includes('공휴일'))
+                    .map(item => {
+                        if (item.q.includes('남성 요양보호사')) {
+                            item.a = '현재 전국의 요양보호사 인력 중 남성 요양보호사의 비율이 매우 낮아, 남성 요양보호사 매칭은 현실적으로 쉽지 않으며 대기 시간이 오래 걸리거나 즉각적인 매칭이 어려울 수 있습니다. 사전에 센터로 문의해 주시면 당시 인력 현황을 확인하여 최대한 안내와 조정을 도와드리겠습니다.';
+                        }
+                        if (item.q.includes('요양등급이 아직 없는데')) {
+                            item.a = '국가지원(노인장기요양보험)을 통한 방문요양 및 방문목욕 서비스는 장기요양등급을 판정받으신 어르신만 이용이 가능하므로, 등급 없이는 즉각적인 국가지원 서비스 이용이 불가능합니다. 다만, 가온복지센터에서 등급 신청 서류 준비 및 신청 상담 등을 상세히 지원해 드리고 있으니, 등급이 없으시더라도 먼저 센터로 연락 주시면 등급 신청 절차를 친절히 안내해 드리겠습니다.';
+                        }
+                        return item;
+                    });
+            } catch (e) { 
+                faqData = defaultFaq; 
             }
-            catch (e) { faqData = defaultFaq; }
 
             faqList.innerHTML = faqData.map((item, i) => {
                 let badgeHtml = '';
@@ -497,10 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (level === '0') {
             // No class/level yet
-            totalLimitDisplay.textContent = '등급 판정 전';
+            totalLimitDisplay.textContent = '등급 미보유';
             govSupportDisplay.textContent = '0원';
-            outOfPocketDisplay.textContent = '등급 신청 상담 필요';
-            outOfPocketDisplay.style.fontSize = '1.15rem';
+            outOfPocketDisplay.innerHTML = '<span style="color: #e53e3e; font-size: 0.95rem; font-weight: 600; display: block; line-height: 1.4;">등급 없이는 국가지원 불가<br>(등급 신청 상담 필요)</span>';
             return;
         }
 
@@ -746,72 +765,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === adminPasswordModal) {
                 adminPasswordModal.classList.remove('active');
                 document.body.style.overflow = 'initial';
-            }
-        });
-    }
-
-    /* ==========================================================================
-       8. User Q&A Form Submission
-       ========================================================================== */
-    const faqForm = document.getElementById('faqUserWriteForm');
-    if (faqForm) {
-        faqForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const inputWriter = document.getElementById('faqWriter');
-            const inputPassword = document.getElementById('faqPassword');
-            const inputQuestion = document.getElementById('faqQuestionText');
-
-            if (!inputWriter.value.trim()) {
-                alert('작성자 성함을 입력해주세요.');
-                inputWriter.focus();
-                return;
-            }
-            if (!inputPassword.value.trim() || inputPassword.value.length < 4) {
-                alert('비밀번호 숫자 4자리를 입력해주세요.');
-                inputPassword.focus();
-                return;
-            }
-            if (!inputQuestion.value.trim()) {
-                alert('질문 내용을 입력해주세요.');
-                inputQuestion.focus();
-                return;
-            }
-
-            const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-            
-            let currentFaqs = [];
-            if (settings.faq) {
-                try { currentFaqs = JSON.parse(settings.faq); } catch(err) { currentFaqs = []; }
-            }
-            
-            const newQna = {
-                q: inputQuestion.value.trim(),
-                a: '답변을 준비 중입니다.',
-                writer: inputWriter.value.trim(),
-                password: inputPassword.value.trim(),
-                isUserCreated: true,
-                createdAt: new Date().toLocaleString('ko-KR')
-            };
-
-            currentFaqs.push(newQna);
-            settings.faq = JSON.stringify(currentFaqs);
-            localStorage.setItem('gaon_settings', JSON.stringify(settings));
-
-            alert('질문이 성공적으로 등록되었습니다!\n센터장이 확인한 뒤 답변을 등록해 드립니다.');
-            
-            faqForm.reset();
-
-            if (typeof window.renderFaqList === 'function') {
-                window.renderFaqList();
-                
-                setTimeout(() => {
-                    const newFaqItem = document.getElementById(`faqItem${currentFaqs.length - 1}`);
-                    if (newFaqItem) {
-                        newFaqItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        window.toggleFaq(currentFaqs.length - 1);
-                    }
-                }, 300);
             }
         });
     }
