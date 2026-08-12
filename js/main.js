@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
             settings.hasClearedExamples = true;
             changed = true;
         }
-        if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || !settings.hoursWeekday) {
-            settings.hoursWeekday = '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)';
+        if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || !settings.hoursWeekday) {
+            settings.hoursWeekday = '09:00 ~ 18:00 (18:00 이후 센터장 연결)';
             changed = true;
         }
         
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 평일 운영시간
         const footerHoursWeekday = document.getElementById('footerHoursWeekday');
-        if (footerHoursWeekday) footerHoursWeekday.textContent = settings.hoursWeekday || '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)';
+        if (footerHoursWeekday) footerHoursWeekday.textContent = settings.hoursWeekday || '09:00 ~ 18:00 (18:00 이후 센터장 연결)';
         
         // 주말/공휴일 운영시간
         const footerHoursWeekend = document.getElementById('footerHoursWeekend');
