@@ -26,6 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
             settings.serviceAreas = targetAreas;
             changed = true;
         }
+        if (!settings.hasClearedExamples) {
+            settings.reviews = "[]";
+            settings.gallery = "[]";
+            settings.hasClearedExamples = true;
+            changed = true;
+        }
         
         for (let key in settings) {
             if (typeof settings[key] === 'string') {
@@ -183,68 +189,93 @@ document.addEventListener('DOMContentLoaded', () => {
         // ① 이용자 후기 렌더링
         const reviewsGrid = document.getElementById('reviewsGrid');
         if (reviewsGrid) {
-            const defaultReviews = [
-                { name: '김○○ 보호자', relation: '어머니 (85세, 방문요양)', stars: 5, text: '처음에는 낯선 분이 집에 오시는 게 걱정됐는데, 요양보호사 선생님이 워낙 친절하고 세심하게 어머니를 돌봐주셔서 이제는 어머니가 먼저 기다리세요. 정말 감사합니다.' },
-                { name: '이○○ 보호자', relation: '아버지 (79세, 방문목욕)', stars: 5, text: '혼자 모시기 힘들었던 목욕 도움을 전문적으로 해주셔서 너무 편안했습니다. 아버지가 기분 좋게 목욕하신 모습을 보니 보호자로서 마음이 놓였습니다.' },
-                { name: '박○○ 보호자', relation: '장모님 (91세, 방문요양)', stars: 5, text: '등급 신청부터 서비스 연결까지 모든 과정을 친절하게 도와주셨어요. 복잡한 서류 절차를 혼자 했더라면 포기했을 텐데 가온복지센터 덕분에 잘 해결했습니다.' }
-            ];
+            const defaultReviews = [];
             let reviewsData;
             try { reviewsData = settings.reviews ? JSON.parse(settings.reviews) : defaultReviews; }
             catch (e) { reviewsData = defaultReviews; }
 
-            reviewsGrid.innerHTML = reviewsData.map(r => {
-                const stars = parseInt(r.stars) || 5;
-                const starsHtml = Array.from({length: 5}, (_, i) =>
-                    `<i class="fa-solid fa-star${i >= stars ? ' empty' : ''}"></i>`).join('');
-                const initial = r.name ? r.name.charAt(0) : '?';
-                return `
-                    <div class="review-card">
-                        <span class="review-quote">"</span>
-                        <div class="review-stars">${starsHtml}</div>
-                        <p class="review-text">${escapeHtml(r.text || '')}</p>
-                        <div class="review-author">
-                            <div class="review-avatar"><i class="fa-solid fa-user"></i></div>
-                            <div>
-                                <div class="review-name">${escapeHtml(r.name || '')}</div>
-                                <div class="review-relation">${escapeHtml(r.relation || '')}</div>
+            const reviewsSection = document.getElementById('reviews');
+            const reviewsNavLink = document.querySelector('a[href="#reviews"]');
+
+            if (reviewsData.length === 0) {
+                if (reviewsSection) reviewsSection.style.display = 'none';
+                if (reviewsNavLink) {
+                    const li = reviewsNavLink.closest('li');
+                    if (li) li.style.display = 'none';
+                }
+            } else {
+                if (reviewsSection) reviewsSection.style.display = 'block';
+                if (reviewsNavLink) {
+                    const li = reviewsNavLink.closest('li');
+                    if (li) li.style.display = 'block';
+                }
+
+                reviewsGrid.innerHTML = reviewsData.map(r => {
+                    const stars = parseInt(r.stars) || 5;
+                    const starsHtml = Array.from({length: 5}, (_, i) =>
+                        `<i class="fa-solid fa-star${i >= stars ? ' empty' : ''}"></i>`).join('');
+                    return `
+                        <div class="review-card">
+                            <span class="review-quote">"</span>
+                            <div class="review-stars">${starsHtml}</div>
+                            <p class="review-text">${escapeHtml(r.text || '')}</p>
+                            <div class="review-author">
+                                <div class="review-avatar"><i class="fa-solid fa-user"></i></div>
+                                <div>
+                                    <div class="review-name">${escapeHtml(r.name || '')}</div>
+                                    <div class="review-relation">${escapeHtml(r.relation || '')}</div>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
-            }).join('');
+                        </div>`;
+                }).join('');
+            }
         }
 
         // ② 갤러리 렌더링
         const galleryGrid = document.getElementById('galleryGrid');
         if (galleryGrid) {
-            const defaultGallery = [
-                { url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80', caption: '노인장기요양기관 지정 인증서' },
-                { url: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80', caption: '요양보호사 전문 교육 현장' },
-                { url: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&q=80', caption: '어르신 맞춤 방문 케어 현장' }
-            ];
+            const defaultGallery = [];
             let galleryData;
             try { galleryData = settings.gallery ? JSON.parse(settings.gallery) : defaultGallery; }
             catch (e) { galleryData = defaultGallery; }
 
-            galleryGrid.innerHTML = galleryData.map(g => {
-                if (g.url && g.url.trim()) {
-                    return `
-                        <div class="gallery-item">
-                            <img src="${escapeHtml(g.url)}" alt="${escapeHtml(g.caption || '갤러리 사진')}" loading="lazy"
-                                 onerror="this.parentElement.innerHTML='<div class=\\'gallery-placeholder\\'><i class=\\'fa-solid fa-image\\'></i><span>이미지 로드 실패</span></div>'">
-                            <div class="gallery-overlay">
-                                <span class="gallery-caption">${escapeHtml(g.caption || '')}</span>
-                            </div>
-                        </div>`;
-                } else {
-                    return `
-                        <div class="gallery-item">
-                            <div class="gallery-placeholder">
-                                <i class="fa-solid fa-image"></i>
-                                <span>${escapeHtml(g.caption || '사진')}</span>
-                            </div>
-                        </div>`;
+            const gallerySection = document.getElementById('gallery');
+            const galleryNavLink = document.querySelector('a[href="#gallery"]');
+
+            if (galleryData.length === 0) {
+                if (gallerySection) gallerySection.style.display = 'none';
+                if (galleryNavLink) {
+                    const li = galleryNavLink.closest('li');
+                    if (li) li.style.display = 'none';
                 }
-            }).join('');
+            } else {
+                if (gallerySection) gallerySection.style.display = 'block';
+                if (galleryNavLink) {
+                    const li = galleryNavLink.closest('li');
+                    if (li) li.style.display = 'block';
+                }
+
+                galleryGrid.innerHTML = galleryData.map(g => {
+                    if (g.url && g.url.trim()) {
+                        return `
+                            <div class="gallery-item">
+                                <img src="${escapeHtml(g.url)}" alt="${escapeHtml(g.caption || '갤러리 사진')}" loading="lazy"
+                                     onerror="this.parentElement.innerHTML='<div class=\\'gallery-placeholder\\'><i class=\\'fa-solid fa-image\\'></i><span>이미지 로드 실패</span></div>'">
+                                <div class="gallery-overlay">
+                                    <span class="gallery-caption">${escapeHtml(g.caption || '')}</span>
+                                </div>
+                            </div>`;
+                    } else {
+                        return `
+                            <div class="gallery-item">
+                                <div class="gallery-placeholder">
+                                    <i class="fa-solid fa-image"></i>
+                                    <span>${escapeHtml(g.caption || '사진')}</span>
+                                </div>
+                            </div>`;
+                    }
+                }).join('');
+            }
         }
 
         // ③ 지도 및 서비스 지역 렌더링
