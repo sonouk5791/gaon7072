@@ -1418,8 +1418,7 @@ h1, h2, h3, h4 {
 
 .hours-list li strong {
     color: var(--color-text-light);
-    display: inline-block;
-    width: 90px;
+    margin-right: 6px;
 }
 
 .footer-bottom {
