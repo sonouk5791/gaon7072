@@ -1380,8 +1380,7 @@ h1, h2, h3, h4 {
 
 .info-list li strong {
     color: var(--color-text-light);
-    display: inline-block;
-    width: 175px;
+    margin-right: 6px;
 }
 
 .contact-card {
