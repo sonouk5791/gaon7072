@@ -11,13 +11,38 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        if (settings.address !== '전북특별자치도 부안군 부안읍 용계길 13번지 2호') {
-            settings.address = '전북특별자치도 부안군 부안읍 용계길 13번지 2호';
+        if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호')) {
+            settings.address = '전북특별자치도 부안군 부안읍 용계길 13';
             changed = true;
         }
         
-        if (settings.mapAddress !== '전북특별자치도 부안군 부안읍 용계길 13번지 2호') {
-            settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13번지 2호';
+        if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호')) {
+            settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13';
+            changed = true;
+        }
+        
+        if (!settings.phone || settings.phone === '02-1234-5678') {
+            settings.phone = '063-584-7072';
+            changed = true;
+        }
+        
+        if (!settings.fax || settings.fax === '02-1234-5679') {
+            settings.fax = '063-584-7073';
+            changed = true;
+        }
+        
+        if (!settings.email || settings.email === 'gaoncare@email.com') {
+            settings.email = 'gaon7072@naver.com';
+            changed = true;
+        }
+        
+        if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || !settings.hoursWeekday) {
+            settings.hoursWeekday = '08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)';
+            changed = true;
+        }
+        
+        if (settings.slogan === '내 부모님처럼, 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.' || !settings.slogan) {
+            settings.slogan = '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
             changed = true;
         }
         
@@ -32,10 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
             settings.hasClearedExamples = true;
             changed = true;
         }
-        if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || !settings.hoursWeekday) {
-            settings.hoursWeekday = '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)';
-            changed = true;
-        }
         
         for (let key in settings) {
             if (typeof settings[key] === 'string') {
@@ -45,7 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     .replace(/가온이/g, '가온복지센터가')
                     .replace(/가온은/g, '가온복지센터는')
                     .replace(/가온의/g, '가온복지센터의')
-                    .replace(/가온에는/g, '가온복지센터에는');
+                    .replace(/가온에는/g, '가온복지센터에는')
+                    .replace(/13번지/g, '13');
                 
                 if (replaced !== original) {
                     settings[key] = replaced;
@@ -90,10 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 주소
         const footerAddress = document.getElementById('footerAddress');
-        if (footerAddress) footerAddress.textContent = settings.address || '';
+        if (footerAddress) footerAddress.textContent = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
         
         // 전화번호
-        const phone = settings.phone || '02-1234-5678';
+        const phone = settings.phone || '063-584-7072';
         const headerPhone = document.querySelector('#headerPhone span');
         if (headerPhone) headerPhone.textContent = phone;
         
@@ -108,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 브랜드 슬로건
         const footerSlogan = document.getElementById('footerSlogan');
-        if (footerSlogan) footerSlogan.textContent = settings.slogan || '내 부모님처럼, 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
+        if (footerSlogan) footerSlogan.textContent = settings.slogan || '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
         
         // SNS 링크
         const footerSnsBlog = document.getElementById('footerSnsBlog');
@@ -122,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 평일 운영시간
         const footerHoursWeekday = document.getElementById('footerHoursWeekday');
-        if (footerHoursWeekday) footerHoursWeekday.textContent = settings.hoursWeekday || '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)';
+        if (footerHoursWeekday) footerHoursWeekday.textContent = settings.hoursWeekday || '08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)';
         
         // 주말/공휴일 운영시간
         const footerHoursWeekend = document.getElementById('footerHoursWeekend');
@@ -130,11 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 팩스
         const footerFax = document.getElementById('footerFax');
-        if (footerFax) footerFax.textContent = settings.fax || '02-1234-5679';
+        if (footerFax) footerFax.textContent = settings.fax || '063-584-7073';
         
         // 이메일
         const footerEmail = document.getElementById('footerEmail');
-        if (footerEmail) footerEmail.textContent = settings.email || 'gaoncare@email.com';
+        if (footerEmail) footerEmail.textContent = settings.email || 'gaon7072@naver.com';
 
         // 기관장 인사말 설정 로드
         const greetingTitle = document.getElementById('greetingTitle');
@@ -286,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mapEmbed = document.getElementById('mapEmbed');
         const mapAddressText = document.getElementById('mapAddressText');
         const serviceAreaTags = document.getElementById('serviceAreaTags');
-        const defaultAddress = '전북특별자치도 부안군 부안읍 용계길 13번지 2호';
+        const defaultAddress = '전북특별자치도 부안군 부안읍 용계길 13';
         const mapAddress = settings.mapAddress || defaultAddress;
         if (mapAddressText) mapAddressText.textContent = mapAddress;
         if (mapEmbed) {
