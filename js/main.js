@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호')) {
+        if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호') || settings.address !== '전북특별자치도 부안군 부안읍 용계길 13') {
             settings.address = '전북특별자치도 부안군 부안읍 용계길 13';
             changed = true;
         }
         
-        if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호')) {
+        if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호') || settings.mapAddress !== '전북특별자치도 부안군 부안읍 용계길 13') {
             settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13';
             changed = true;
         }
@@ -36,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || !settings.hoursWeekday) {
-            settings.hoursWeekday = '08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)';
+        if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || settings.hoursWeekday === '09:00 ~ 18:00 (18:00 이후 센터장 연결)' || !settings.hoursWeekday) {
+            settings.hoursWeekday = '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
             changed = true;
         }
         
@@ -137,14 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (footerSnsBlog) footerSnsBlog.setAttribute('href', settings.snsBlog || '#');
         
         const footerSnsKakao = document.getElementById('footerSnsKakao');
-        if (footerSnsKakao) footerSnsKakao.setAttribute('href', settings.snsKakao || '#');
+        if (footerSnsKakao) footerSnsKakao.setAttribute('href', settings.snsKakao || 'http://pf.kakao.com/_xfxmvXn');
         
         const footerSnsYoutube = document.getElementById('footerSnsYoutube');
         if (footerSnsYoutube) footerSnsYoutube.setAttribute('href', settings.snsYoutube || '#');
         
         // 평일 운영시간
         const footerHoursWeekday = document.getElementById('footerHoursWeekday');
-        if (footerHoursWeekday) footerHoursWeekday.textContent = settings.hoursWeekday || '08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)';
+        if (footerHoursWeekday) footerHoursWeekday.textContent = settings.hoursWeekday || '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
         
         // 주말/공휴일 운영시간
         const footerHoursWeekend = document.getElementById('footerHoursWeekend');

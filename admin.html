@@ -174,7 +174,7 @@
                                     <label for="setHoursWeekday" class="form-label">평일 운영시간</label>
                                     <div class="input-wrapper">
                                         <i class="fa-solid fa-calendar-day input-icon"></i>
-                                        <input type="text" id="setHoursWeekday" class="form-input" placeholder="예) 08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                        <input type="text" id="setHoursWeekday" class="form-input" placeholder="예) 08:00 ~ 17:00 (17:00 이후 센터장 연결)" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -407,12 +407,12 @@
                     changed = true;
                 }
                 
-                if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호')) {
+                if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호') || settings.address !== '전북특별자치도 부안군 부안읍 용계길 13') {
                     settings.address = '전북특별자치도 부안군 부안읍 용계길 13';
                     changed = true;
                 }
                 
-                if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호')) {
+                if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호') || settings.mapAddress !== '전북특별자치도 부안군 부안읍 용계길 13') {
                     settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13';
                     changed = true;
                 }
@@ -445,8 +445,8 @@
                     changed = true;
                 }
                 
-                if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || !settings.hoursWeekday) {
-                    settings.hoursWeekday = '08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)';
+                if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || settings.hoursWeekday === '09:00 ~ 18:00 (18:00 이후 센터장 연결)' || !settings.hoursWeekday) {
+                    settings.hoursWeekday = '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
                     changed = true;
                 }
                 
@@ -930,12 +930,12 @@
                 if (bizNumberInput) bizNumberInput.value = settings.bizNumber || '';
                 if (addressInput) addressInput.value = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
                 if (sloganInput) sloganInput.value = settings.slogan !== undefined ? settings.slogan : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
-                if (hoursWeekdayInput) hoursWeekdayInput.value = settings.hoursWeekday !== undefined ? settings.hoursWeekday : '08:00 ~ 17:00 (이후 센터장에게 전화 연결됨)';
+                if (hoursWeekdayInput) hoursWeekdayInput.value = settings.hoursWeekday !== undefined ? settings.hoursWeekday : '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
                 if (hoursWeekendInput) hoursWeekendInput.value = settings.hoursWeekend !== undefined ? settings.hoursWeekend : '24시간 전화 상담 대기';
                 if (faxInput) faxInput.value = settings.fax !== undefined ? settings.fax : '063-584-7073';
                 if (emailInput) emailInput.value = settings.email !== undefined ? settings.email : 'gaon7072@naver.com';
                 if (snsBlogInput) snsBlogInput.value = settings.snsBlog || '';
-                if (snsKakaoInput) snsKakaoInput.value = settings.snsKakao || '';
+                if (snsKakaoInput) snsKakaoInput.value = settings.snsKakao || 'http://pf.kakao.com/_xfxmvXn';
                 if (snsYoutubeInput) snsYoutubeInput.value = settings.snsYoutube || '';
 
                 // Greetings Form Init
