@@ -6,8 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let settings = rawSettings ? JSON.parse(rawSettings) : {};
         let changed = false;
         
-        if (settings.agencyName === '가온' || settings.agencyName === '가온방문요양/방문목욕' || !settings.agencyName) {
-            settings.agencyName = '가온복지센터';
+        if (!settings.owner || settings.owner === '홍길동') {
+            settings.owner = '최대웅';
+            changed = true;
+        }
+        
+        if (!settings.greetingDirectorName || settings.greetingDirectorName === '홍길동') {
+            settings.greetingDirectorName = '최대웅';
             changed = true;
         }
         
@@ -100,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 대표자명
         const footerOwner = document.getElementById('footerOwner');
-        if (footerOwner) footerOwner.textContent = settings.owner || '';
+        if (footerOwner) footerOwner.textContent = settings.owner || '최대웅';
         
 
         // 주소
@@ -163,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (greetingPosition) greetingPosition.textContent = settings.greetingPosition || '센터장';
         
         const greetingDirectorName = document.getElementById('greetingDirectorName');
-        if (greetingDirectorName) greetingDirectorName.textContent = settings.greetingDirectorName || settings.owner || '홍길동';
+        if (greetingDirectorName) greetingDirectorName.textContent = settings.greetingDirectorName || settings.owner || '최대웅';
         
         const greetingText = document.getElementById('greetingText');
         if (greetingText) {

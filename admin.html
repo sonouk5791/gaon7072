@@ -137,7 +137,7 @@
                                     <label for="setOwner" class="form-label">대표자명</label>
                                     <div class="input-wrapper">
                                         <i class="fa-solid fa-user-tie input-icon"></i>
-                                        <input type="text" id="setOwner" class="form-input" placeholder="대표자명을 입력하세요." required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                        <input type="text" id="setOwner" class="form-input" placeholder="예) 최대웅" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -298,7 +298,7 @@
                                 <label for="setGreetingDirectorName" class="form-label">작성자 이름</label>
                                 <div class="input-wrapper">
                                     <i class="fa-solid fa-signature input-icon"></i>
-                                    <input type="text" id="setGreetingDirectorName" class="form-input" placeholder="예) 홍길동" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <input type="text" id="setGreetingDirectorName" class="form-input" placeholder="예) 최대웅" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
                                 </div>
                             </div>
                         </div>
@@ -924,7 +924,7 @@
                 // Settings Form
                 const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
                 if (agencyNameInput) agencyNameInput.value = settings.agencyName || '가온복지센터';
-                if (ownerInput) ownerInput.value = settings.owner || '';
+                if (ownerInput) ownerInput.value = settings.owner || '최대웅';
                 if (phoneInput) phoneInput.value = settings.phone || '063-584-7072';
                 if (addressInput) addressInput.value = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
                 if (sloganInput) sloganInput.value = settings.slogan !== undefined ? settings.slogan : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
@@ -943,7 +943,7 @@
                 greetingContentInput.value = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
                 
                 greetingPositionInput.value = settings.greetingPosition !== undefined ? settings.greetingPosition : '센터장';
-                greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '홍길동');
+                greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '최대웅');
 
                 // History Form Init
                 const defaultHistory = `2026.03 - 가온복지센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
