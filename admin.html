@@ -80,7 +80,7 @@
             <!-- Leads Management List Card -->
             <div class="admin-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <h2 class="admin-card-title" style="margin-bottom: 0;"><i class="fa-solid fa-users"></i> 무료 상담 접수 고객 명단</h2>
+                    <h2 class="admin-card-title" style="margin-bottom: 0;"><i class="fa-solid fa-users"></i> 상담 접수 고객 명단</h2>
                     <button class="btn-primary" id="exportCsvBtn" style="padding: 10px 20px; font-size: 0.9rem; border-radius: var(--border-radius-sm);"><i class="fa-solid fa-file-excel"></i> 엑셀 내보내기</button>
                 </div>
                 
@@ -407,13 +407,13 @@
                     changed = true;
                 }
                 
-                if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호') || settings.address !== '전북특별자치도 부안군 부안읍 용계길 13') {
-                    settings.address = '전북특별자치도 부안군 부안읍 용계길 13';
+                if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호')) {
+                    settings.address = (settings.address || '전북특별자치도 부안군 부안읍 용계길 13').replace(/13번지/g, '13');
                     changed = true;
                 }
                 
-                if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호') || settings.mapAddress !== '전북특별자치도 부안군 부안읍 용계길 13') {
-                    settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13';
+                if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호')) {
+                    settings.mapAddress = (settings.mapAddress || '전북특별자치도 부안군 부안읍 용계길 13').replace(/13번지/g, '13');
                     changed = true;
                 }
                 
@@ -450,8 +450,8 @@
                     changed = true;
                 }
                 
-                if (settings.slogan === '내 부모님처럼, 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.' || !settings.slogan) {
-                    settings.slogan = '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
+                if (!settings.slogan || settings.slogan.includes('내 부모님처럼,')) {
+                    settings.slogan = settings.slogan ? settings.slogan.replace(/내 부모님처럼,/g, '내 부모님처럼') : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
                     changed = true;
                 }
                 
@@ -926,8 +926,6 @@
                 if (agencyNameInput) agencyNameInput.value = settings.agencyName || '가온복지센터';
                 if (ownerInput) ownerInput.value = settings.owner || '';
                 if (phoneInput) phoneInput.value = settings.phone || '063-584-7072';
-                if (designationInput) designationInput.value = settings.designation || '';
-                if (bizNumberInput) bizNumberInput.value = settings.bizNumber || '';
                 if (addressInput) addressInput.value = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
                 if (sloganInput) sloganInput.value = settings.slogan !== undefined ? settings.slogan : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
                 if (hoursWeekdayInput) hoursWeekdayInput.value = settings.hoursWeekday !== undefined ? settings.hoursWeekday : '08:00 ~ 17:00 (17:00 이후 센터장 연결)';

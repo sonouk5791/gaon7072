@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호') || settings.address !== '전북특별자치도 부안군 부안읍 용계길 13') {
-            settings.address = '전북특별자치도 부안군 부안읍 용계길 13';
+        if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호')) {
+            settings.address = (settings.address || '전북특별자치도 부안군 부안읍 용계길 13').replace(/13번지/g, '13');
             changed = true;
         }
         
-        if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호') || settings.mapAddress !== '전북특별자치도 부안군 부안읍 용계길 13') {
-            settings.mapAddress = '전북특별자치도 부안군 부안읍 용계길 13';
+        if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호')) {
+            settings.mapAddress = (settings.mapAddress || '전북특별자치도 부안군 부안읍 용계길 13').replace(/13번지/g, '13');
             changed = true;
         }
         
@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        if (settings.slogan === '내 부모님처럼, 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.' || !settings.slogan) {
-            settings.slogan = '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
+        if (!settings.slogan || settings.slogan.includes('내 부모님처럼,')) {
+            settings.slogan = settings.slogan ? settings.slogan.replace(/내 부모님처럼,/g, '내 부모님처럼') : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
             changed = true;
         }
         
@@ -102,14 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const footerOwner = document.getElementById('footerOwner');
         if (footerOwner) footerOwner.textContent = settings.owner || '';
         
-        // 장기요양기관 지정번호
-        const footerDesignation = document.getElementById('footerDesignation');
-        if (footerDesignation) footerDesignation.textContent = settings.designation || '';
-        
-        // 사업자등록번호
-        const footerBizNumber = document.getElementById('footerBizNumber');
-        if (footerBizNumber) footerBizNumber.textContent = settings.bizNumber || '';
-        
+
         // 주소
         const footerAddress = document.getElementById('footerAddress');
         if (footerAddress) footerAddress.textContent = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
