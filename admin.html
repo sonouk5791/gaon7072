@@ -314,11 +314,11 @@
                             <label for="setHistoryText" class="form-label">연혁 항목 목록</label>
                             <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 8px; line-height: 1.4;">
                                 * 한 줄에 하나의 연혁 항목을 입력해주세요.<br>
-                                * 형식: <strong>년도.월 - 내용</strong> (예: 2026.03 - 가온복지센터 설립)
+                                * 형식: <strong>년도.월 - 내용</strong> (예: 2018.08 - 가온복지센터 방문요양 시작)
                             </p>
                             <div class="input-wrapper">
                                 <i class="fa-solid fa-list-ul input-icon" style="top: 15px;"></i>
-                                <textarea id="setHistoryText" class="form-input" placeholder="예)&#10;2026.03 - 가온복지센터 설립&#10;2026.05 - 장기요양기관 지정" required style="padding-left: 44px; padding-top: 12px; height: 150px; resize: vertical; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.6;"></textarea>
+                                <textarea id="setHistoryText" class="form-input" placeholder="예)&#10;2018.08 - 국민건강보험공단 노인장기요양 기관 지정&#10;2018.08 - 가온복지센터 방문요양 시작&#10;2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정&#10;2021.08 - 가온복지센터 방문목욕 시작" required style="padding-left: 44px; padding-top: 12px; height: 150px; resize: vertical; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.6;"></textarea>
                             </div>
                         </div>
                         <button type="submit" class="btn-submit" style="margin-top: 10px; width: 100%;"><i class="fa-solid fa-circle-check"></i> 연혁 정보 저장</button>
@@ -946,7 +946,7 @@
                 greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '최대웅');
 
                 // History Form Init
-                const defaultHistory = `2026.03 - 가온복지센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
+                const defaultHistory = `2018.08 - 국민건강보험공단 노인장기요양 기관 지정\n2018.08 - 가온복지센터 방문요양 시작\n2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정\n2021.08 - 가온복지센터 방문목욕 시작`;
                 historyTextInput.value = settings.historyText !== undefined ? settings.historyText : defaultHistory;
 
                 // Calculator Form

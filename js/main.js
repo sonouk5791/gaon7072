@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 기관 연혁 로드 및 렌더링
         const historyTimeline = document.getElementById('historyTimeline');
         if (historyTimeline) {
-            const defaultHistory = `2026.03 - 가온복지센터 설립\n2026.05 - 국민건강보험공단 노인장기요양기관 지정\n2026.08 - 어르신 밀착 정서 케어 및 복지용구 연계 서비스 도입`;
+            const defaultHistory = `2018.08 - 국민건강보험공단 노인장기요양 기관 지정\n2018.08 - 가온복지센터 방문요양 시작\n2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정\n2021.08 - 가온복지센터 방문목욕 시작`;
             const rawHistory = settings.historyText !== undefined ? settings.historyText : defaultHistory;
             const lines = rawHistory.split('\n').filter(line => line.trim() !== '');
             
