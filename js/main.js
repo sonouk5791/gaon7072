@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        const targetAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
+        const targetAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면\n위도면';
         if (settings.serviceAreas !== targetAreas) {
             settings.serviceAreas = targetAreas;
             changed = true;
@@ -314,11 +314,11 @@ document.addEventListener('DOMContentLoaded', () => {
             mapEmbed.src = `https://maps.google.com/maps?q=${encodedAddr}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
         }
         if (serviceAreaTags) {
-            const defaultAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
+            const defaultAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면\n위도면';
             const rawAreas = settings.serviceAreas || defaultAreas;
             serviceAreaTags.innerHTML = rawAreas.split('\n')
                 .map(a => a.trim()).filter(a => a)
-                .map(a => `<span class="area-tag">${escapeHtml(a)}</span>`).join('');
+                .map(a => `<span class="area-tag"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(a)}</span>`).join('');
         }
 
         // ④ FAQ 렌더링
