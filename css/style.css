@@ -4045,5 +4045,290 @@ h1, h2, h3, h4 {
 }
 
 
+/* ============================================================
+   NEW CALCULATOR STYLES (서비스 구분 / 시간 / 등급 / 합계)
+   ============================================================ */
 
+/* 서비스 구분 - 요양/목욕 라디오 카드 */
+.calc-service-type-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 4px;
+}
 
+.calc-radio-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 18px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calc-radio-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.calc-radio-card i {
+    font-size: 1.6rem;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+}
+
+.calc-radio-card:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+}
+
+.calc-radio-card:hover i {
+    color: var(--color-primary);
+}
+
+.calc-radio-card.active {
+    border-color: #1e5a48;
+    background: linear-gradient(135deg, #f0faf5, #e6f7f0);
+    color: #1e5a48;
+    box-shadow: 0 4px 16px rgba(30, 90, 72, 0.18);
+}
+
+.calc-radio-card.active i {
+    color: #1e5a48;
+}
+
+/* 서비스 시간 - 요양 (5개 버튼) */
+.calc-time-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.calc-time-card {
+    flex: 1;
+    min-width: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 6px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    color: #64748b;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calc-time-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.calc-time-card .time-min {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: inherit;
+}
+
+.calc-time-card:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+    background: #f0fdf8;
+}
+
+.calc-time-card.active {
+    border-color: #1e5a48;
+    background: linear-gradient(135deg, #f0faf5, #e6f7f0);
+    color: #1e5a48;
+    box-shadow: 0 3px 12px rgba(30, 90, 72, 0.15);
+}
+
+/* 서비스 시간 - 목욕 (2개 넓은 버튼) */
+.calc-time-grid--bath {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.calc-time-card--bath {
+    flex: none;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    min-width: unset;
+}
+
+.calc-time-card--bath i {
+    font-size: 1.4rem;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+}
+
+.calc-time-card--bath .time-label {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: inherit;
+}
+
+.calc-time-card--bath .time-sub {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-left: auto;
+}
+
+.calc-time-card--bath:hover i,
+.calc-time-card--bath.active i {
+    color: #1e5a48;
+}
+
+.calc-time-card--bath.active .time-sub {
+    color: #2d8a6a;
+}
+
+/* 등급 선택 그리드 */
+.calc-grade-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.calc-grade-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #64748b;
+    text-align: center;
+    line-height: 1.4;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 56px;
+}
+
+.calc-grade-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.calc-grade-card span {
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.calc-grade-card:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+    background: #f0fdf8;
+}
+
+.calc-grade-card.active {
+    border-color: #1e5a48;
+    background: linear-gradient(135deg, #f0faf5, #e6f7f0);
+    color: #1e5a48;
+    box-shadow: 0 3px 12px rgba(30, 90, 72, 0.15);
+}
+
+/* 합계 결과 테이블 */
+.calc-result-table {
+    background: #f8fffe;
+    border: 1px solid #c8e6da;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.calc-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    border-bottom: 1px solid #e2f2eb;
+    font-size: 0.95rem;
+}
+
+.calc-result-row:last-child {
+    border-bottom: none;
+}
+
+.calc-result-row.highlight-row {
+    background: #e9f7f1;
+    padding: 14px 18px;
+}
+
+.calc-result-label {
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.calc-result-label small {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-left: 4px;
+}
+
+.calc-result-value {
+    font-weight: 700;
+    color: var(--color-text-main);
+    font-size: 0.98rem;
+}
+
+/* 서비스 횟수 안내 박스 */
+.calc-service-info-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    margin-top: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #92400e;
+}
+
+.calc-service-info-box i {
+    color: #d97706;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* 작은 안내 텍스트 */
+.calc-note-sm {
+    font-size: 0.82rem;
+    color: #718096;
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+/* 결과 스텝 강조 */
+.calc-result-step {
+    background: linear-gradient(135deg, #f0fdf9, #ffffff);
+    border-color: #b7e5d0;
+}

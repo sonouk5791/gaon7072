@@ -532,78 +532,154 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* ==========================================================================
-       3. Government Subsidy Calculator Logic
+       3. 본인부담금 계산기 Logic (새 형식: 서비스 구분 / 시간 / 등급 / 합계)
        ========================================================================== */
-    const levelSelect = document.getElementById('elderlyLevel');
-    const ratioSelect = document.getElementById('subsidyRatio');
-    const daysSlider = document.getElementById('weeklyDays');
-    const daysValueDisplay = document.getElementById('weeklyDaysValue');
 
-    const totalLimitDisplay = document.getElementById('totalLimitVal');
-    const govSupportDisplay = document.getElementById('govSupportVal');
-    const outOfPocketDisplay = document.getElementById('outOfPocketVal');
-
-    // 2026 Standard Korean Home Care limits by level (Load from LocalStorage if exists)
-    let limitRates = {
-        '1': 1885000,
-        '2': 1690000,
-        '3': 1417200,
-        '4': 1306200,
-        '5': 1121400,
-        '0': 0
+    // 2026 보건복지부 고시 단가 (원/회)
+    const CALC_RATES = {
+        // 요양: { 시간(분): 단가 }
+        요양: {
+            60:  45750,
+            90:  57260,
+            120: 68820,
+            150: 80380,
+            180: 91890
+        },
+        // 목욕: { 구분: 단가 }
+        목욕: {
+            bath_short: 76530,  // 차량 내 40분~60분 미만
+            bath_long:  85400   // 차량 내 60분 이상
+        }
     };
-    let baseDailyCost = 55000;
 
-    const calcSettings = JSON.parse(localStorage.getItem('gaon_calculator_settings'));
-    if (calcSettings) {
-        if (calcSettings.rates) limitRates = { ...limitRates, ...calcSettings.rates };
-        if (calcSettings.baseDailyCost) baseDailyCost = parseInt(calcSettings.baseDailyCost);
-    }
-    const avgWeeksPerMonth = 4.34;
+    // 서비스 횟수 안내
+    const SERVICE_INFO = {
+        요양: '서비스 횟수: 요양 최 5회/일 (1일 기준)',
+        목욕: '서비스 횟수: 목욕 월 2회 이용 가능'
+    };
 
-    function calculateSubsidy() {
-        const level = levelSelect.value;
-        const ratio = parseFloat(ratioSelect.value) / 100;
-        const days = parseInt(daysSlider.value);
+    function runNewCalc() {
+        // 1) 서비스 구분
+        const serviceTypeRadio = document.querySelector('input[name="serviceType"]:checked');
+        if (!serviceTypeRadio) return;
+        const serviceType = serviceTypeRadio.value;
 
-        daysValueDisplay.textContent = `주 ${days}일`;
+        // 2) 서비스 시간
+        const serviceTimeRadio = document.querySelector('input[name="serviceTime"]:checked');
+        if (!serviceTimeRadio) return;
+        const serviceTimeVal = serviceTimeRadio.value;
 
-        const maxLimit = limitRates[level];
-        
-        if (level === '0') {
-            // No class/level yet
-            totalLimitDisplay.textContent = '등급 미보유';
-            govSupportDisplay.textContent = '0원';
-            outOfPocketDisplay.innerHTML = '<span style="color: #e53e3e; font-size: 0.95rem; font-weight: 600; display: block; line-height: 1.4;">등급 없이는 국가지원 불가<br>(등급 신청 상담 필요)</span>';
-            return;
+        // 3) 등급
+        const gradeRadio = document.querySelector('input[name="careGrade"]:checked');
+        if (!gradeRadio) return;
+        const grade = gradeRadio.value;
+
+        // 4) 본인부담률
+        const copaySelect = document.getElementById('copayRatio');
+        const copayRate = copaySelect ? parseFloat(copaySelect.value) / 100 : 0.15;
+
+        // 단가 계산
+        let unitCost = 0;
+        if (serviceType === '요양') {
+            unitCost = CALC_RATES.요양[parseInt(serviceTimeVal)] || 0;
+        } else {
+            unitCost = CALC_RATES.목욕[serviceTimeVal] || 0;
         }
 
-        outOfPocketDisplay.style.fontSize = '1.45rem';
+        // 공단부담 / 본인부담 계산
+        const govCost    = Math.round(unitCost * (1 - copayRate));
+        const copayAmt   = Math.round(unitCost * copayRate);
 
-        // Calculate expected cost: Days/week * Weeks/month * Daily Cost
-        const calculatedCost = Math.round(days * avgWeeksPerMonth * baseDailyCost);
-        
-        // Final service cost can't exceed the monthly government limit
-        const finalCost = Math.min(calculatedCost, maxLimit);
+        // 결과 표시
+        const el = (id) => document.getElementById(id);
+        if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
+        if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
+        if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
+        if (el('outOfPocketVal')) el('outOfPocketVal').textContent = copayAmt.toLocaleString() + '원';
 
-        // Out-of-pocket & Government support
-        const outOfPocket = Math.round(finalCost * ratio);
-        const govSupport = finalCost - outOfPocket;
-
-        // Display with comma formatting
-        totalLimitDisplay.textContent = maxLimit.toLocaleString() + '원';
-        govSupportDisplay.textContent = govSupport.toLocaleString() + '원';
-        outOfPocketDisplay.textContent = outOfPocket.toLocaleString() + '원';
+        // 서비스 횟수 안내
+        if (el('serviceInfoText')) {
+            el('serviceInfoText').textContent = SERVICE_INFO[serviceType];
+        }
     }
 
-    if (levelSelect && ratioSelect && daysSlider) {
-        levelSelect.addEventListener('change', calculateSubsidy);
-        ratioSelect.addEventListener('change', calculateSubsidy);
-        daysSlider.addEventListener('input', calculateSubsidy);
-        
-        // Initial Calculation
-        calculateSubsidy();
+    // 카드 클릭 → active 토글 + 계산
+    function initCalcCardGroup(name, containerSelector) {
+        const cards = document.querySelectorAll(containerSelector);
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                runNewCalc();
+            });
+        });
     }
+
+    // 서비스 구분 전환 시 시간 옵션 토글
+    const serviceTypeCards = document.querySelectorAll('.calc-radio-card');
+    serviceTypeCards.forEach(card => {
+        card.addEventListener('click', () => {
+            serviceTypeCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+
+            const input = card.querySelector('input[name="serviceType"]');
+            if (!input) return;
+            const type = input.value;
+
+            const yoyangOpts = document.getElementById('yoyangTimeOptions');
+            const mogyokOpts = document.getElementById('mogyokTimeOptions');
+
+            if (type === '요양') {
+                if (yoyangOpts) yoyangOpts.style.display = '';
+                if (mogyokOpts) mogyokOpts.style.display = 'none';
+                // 기본 선택: 60분
+                const firstTime = document.getElementById('time60');
+                if (firstTime) {
+                    firstTime.checked = true;
+                    document.querySelectorAll('.calc-time-card').forEach(c => c.classList.remove('active'));
+                    firstTime.closest('.calc-time-card') && firstTime.closest('.calc-time-card').classList.add('active');
+                }
+            } else {
+                if (yoyangOpts) yoyangOpts.style.display = 'none';
+                if (mogyokOpts) mogyokOpts.style.display = '';
+                // 기본 선택: 60분이상
+                const bathDefault = document.getElementById('bathLong');
+                if (bathDefault) {
+                    bathDefault.checked = true;
+                    document.querySelectorAll('.calc-time-card--bath').forEach(c => c.classList.remove('active'));
+                    bathDefault.closest('.calc-time-card--bath') && bathDefault.closest('.calc-time-card--bath').classList.add('active');
+                }
+            }
+            runNewCalc();
+        });
+    });
+
+    // 시간 카드 active 처리
+    initCalcCardGroup('serviceTime', '.calc-time-card');
+
+    // 등급 카드 active 처리
+    initCalcCardGroup('careGrade', '.calc-grade-card');
+
+    // 본인부담률 변경
+    const copaySelectEl = document.getElementById('copayRatio');
+    if (copaySelectEl) copaySelectEl.addEventListener('change', runNewCalc);
+
+    // 초기 active 상태 설정
+    const defaultServiceType = document.querySelector('.calc-radio-card');
+    if (defaultServiceType) defaultServiceType.classList.add('active');
+
+    const defaultTime = document.getElementById('time60');
+    if (defaultTime && defaultTime.closest('.calc-time-card')) {
+        defaultTime.closest('.calc-time-card').classList.add('active');
+    }
+
+    const defaultGrade = document.getElementById('grade4');
+    if (defaultGrade && defaultGrade.closest('.calc-grade-card')) {
+        defaultGrade.closest('.calc-grade-card').classList.add('active');
+    }
+
+    // 초기 계산 실행
+    runNewCalc();
 
 
     /* ==========================================================================
