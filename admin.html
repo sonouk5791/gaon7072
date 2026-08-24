@@ -228,43 +228,87 @@
 
                 <!-- Card Right: Calculator Config -->
                 <div class="admin-card">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-calculator"></i> 장기요양 모의 계산기 세팅</h2>
-                    <form id="calculatorSettingsForm" style="display: flex; flex-direction: column; gap: 15px;">
-                        <div class="form-group">
-                            <label for="setCost" class="form-label">하루 3시간 기본 요양 서비스 단가 (원)</label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-won-sign input-icon"></i>
-                                <input type="number" id="setCost" class="form-input" placeholder="기본 일 단가" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                            </div>
-                        </div>
+                    <h2 class="admin-card-title"><i class="fa-solid fa-calculator"></i> 장기요양 본인부담금 및 요율 설정</h2>
+                    <form id="calculatorSettingsForm" style="display: flex; flex-direction: column; gap: 20px;">
                         
-                        <div style="border-top: 1px dashed var(--color-border); padding-top: 15px; margin-top: 10px;">
-                            <label class="form-label" style="font-weight: 700; margin-bottom: 12px; display: block;"><i class="fa-solid fa-percent"></i> 등급별 국가지원 한도액 설정 (월 한도)</label>
-                            
-                            <div style="display: flex; flex-direction: column; gap: 12px;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-weight: 600; width: 70px;">1등급</span>
-                                    <input type="number" id="rate1" class="form-input" style="padding: 10px; height: auto;" required>
+                        <!-- 1. 등급별 월 한도액 -->
+                        <div>
+                            <h3 style="font-size: 1rem; color: var(--color-primary-dark); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-percent"></i> 등급별 국가지원 월 한도액 설정
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">1등급</span>
+                                    <input type="number" id="rate1" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-weight: 600; width: 70px;">2등급</span>
-                                    <input type="number" id="rate2" class="form-input" style="padding: 10px; height: auto;" required>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">2등급</span>
+                                    <input type="number" id="rate2" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-weight: 600; width: 70px;">3등급</span>
-                                    <input type="number" id="rate3" class="form-input" style="padding: 10px; height: auto;" required>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">3등급</span>
+                                    <input type="number" id="rate3" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-weight: 600; width: 70px;">4등급</span>
-                                    <input type="number" id="rate4" class="form-input" style="padding: 10px; height: auto;" required>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">4등급</span>
+                                    <input type="number" id="rate4" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-weight: 600; width: 70px;">5등급</span>
-                                    <input type="number" id="rate5" class="form-input" style="padding: 10px; height: auto;" required>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">5등급</span>
+                                    <input type="number" id="rate5" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
+                                    <span style="font-weight: 600; font-size: 0.85rem; width: 65px;">인지지원</span>
+                                    <input type="number" id="rate6" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 15px; width: 100%;"><i class="fa-solid fa-circle-check"></i> 계산기 요율 정보 저장</button>
+
+                        <!-- 2. 서비스별 기준 단가 설정 -->
+                        <div style="border-top: 1px dashed var(--color-border); padding-top: 15px;">
+                            <h3 style="font-size: 1rem; color: var(--color-primary-dark); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-coins"></i> 재가/시설 서비스별 단가 설정 (원)
+                            </h3>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 30분 단가</span>
+                                    <input type="number" id="visitCost30" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 60분 단가</span>
+                                    <input type="number" id="visitCost60" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 90분 단가</span>
+                                    <input type="number" id="visitCost90" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 120분 단가</span>
+                                    <input type="number" id="visitCost120" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 180분 단가</span>
+                                    <input type="number" id="visitCost180" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문목욕 1회 단가</span>
+                                    <input type="number" id="bathCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">주야간보호 1일(8시간) 단가</span>
+                                    <input type="number" id="dayCareCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                    <span style="font-size: 0.88rem; font-weight: 600;">시설급여 1일 기준 단가</span>
+                                    <input type="number" id="facilityCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prominent Save Button -->
+                        <button type="submit" id="btnSaveCalcSettings" class="btn-submit" style="margin-top: 15px; width: 100%; font-size: 1.05rem; font-weight: 700; padding: 14px; background-color: var(--color-primary-dark); border-radius: var(--border-radius-sm);">
+                            <i class="fa-solid fa-floppy-disk"></i> 계산기 요율 및 한도 정보 저장
+                        </button>
                     </form>
                 </div>
 
@@ -694,97 +738,7 @@
                 s.mapAddress = document.getElementById('setMapAddress').value.trim();
                 s.serviceAreas = document.getElementById('setServiceAreas').value.trim();
                 localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('지도 및 서비스 지역 정보가 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
-            });
-
-            // Save FAQ
-            document.getElementById('saveFaqBtn')?.addEventListener('click', () => {
-                const rows = document.querySelectorAll('#faqRows .content-row');
-                const data = Array.from(rows).map(row => {
-                    const inputs = row.querySelectorAll('input, textarea');
-                    const qText = inputs[0].value.trim();
-                    const aText = inputs[1].value.trim();
-                    
-                    const item = { q: qText, a: aText };
-                    
-                    if (row.dataset.isUserCreated === 'true') {
-                        item.isUserCreated = true;
-                        item.writer = row.dataset.writer;
-                        item.password = row.dataset.password;
-                        item.createdAt = row.dataset.createdAt;
-                    }
-                    
-                    return item;
-                }).filter(f => f.q || f.a);
-                const s = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                s.faq = JSON.stringify(data);
-                localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('문의사항 목록 및 이용자 답변이 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
-            });
-
-
-
-            /* ==========================================================================
-               2. Leads Table Render & Actions
-
-               ========================================================================== */
-            const leadsTableBody = document.getElementById('leadsTableBody');
-            const noLeadsState = document.getElementById('noLeadsState');
-            
-            const statTotal = document.getElementById('statTotalCount');
-            const statWaiting = document.getElementById('statWaitingCount');
-            const statCompleted = document.getElementById('statCompletedCount');
-
-            function renderLeadsTable() {
-                const leads = JSON.parse(localStorage.getItem('gaon_consultations')) || [];
-                
-                // Update stats
-                statTotal.textContent = leads.length;
-                statWaiting.textContent = leads.filter(l => l.status === '대기중').length;
-                statCompleted.textContent = leads.filter(l => l.status === '완료').length;
-
-                if (leads.length === 0) {
-                    leadsTableBody.innerHTML = '';
-                    noLeadsState.style.display = 'block';
-                    return;
-                }
-
-                noLeadsState.style.display = 'none';
-                let html = '';
-                leads.forEach((lead, index) => {
-                    let statusClass = 'waiting';
-                    if (lead.status === '진행중') statusClass = 'progress';
-                    else if (lead.status === '완료') statusClass = 'completed';
-
-                    const displayedServices = Array.isArray(lead.services) ? lead.services.join(', ') : (lead.services || '없음');
-                    const messageSnippet = lead.message ? lead.message.replace(/\n/g, '<br>') : '-';
-
-                    html += `
-                        <tr>
-                            <td style="text-align: center; font-family: 'Outfit', sans-serif;">${leads.length - index}</td>
-                            <td style="font-weight: 600; color: var(--color-text-main);">${escapeHtml(lead.name)}</td>
-                            <td style="font-family: 'Outfit', sans-serif;">${escapeHtml(lead.phone)}</td>
-                            <td>${escapeHtml(lead.age)}세 대</td>
-                            <td style="font-size: 0.88rem;"><span style="color: var(--color-primary-dark); font-weight: 600;">${escapeHtml(displayedServices)}</span></td>
-                            <td style="font-size: 0.9rem; line-height: 1.4; color: var(--color-text-muted);">${messageSnippet}</td>
-                            <td style="font-size: 0.85rem; font-family: 'Outfit', sans-serif; color: var(--color-text-muted);">${escapeHtml(lead.date)}</td>
-                            <td style="text-align: center;">
-                                <select class="admin-select-sm" onchange="changeLeadStatus(${lead.id}, this.value)">
-                                    <option value="대기중" ${lead.status === '대기중' ? 'selected' : ''}>대기중</option>
-                                    <option value="진행중" ${lead.status === '진행중' ? 'selected' : ''}>진행중</option>
-                                    <option value="완료" ${lead.status === '완료' ? 'selected' : ''}>완료</option>
-                                </select>
-                            </td>
-                            <td style="text-align: center;">
-                                <button class="btn-admin-action btn-admin-danger" onclick="deleteLead(${lead.id})"><i class="fa-solid fa-trash-can"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                leadsTableBody.innerHTML = html;
-            }
-
-            // Expose actions globally for inline html events
+                alert('지도 및 서�            // Expose actions globally for inline html events
             window.changeLeadStatus = function(id, status) {
                 const leads = JSON.parse(localStorage.getItem('gaon_consultations')) || [];
                 const targetIdx = leads.findIndex(l => l.id === id);
@@ -818,16 +772,6 @@
                3. Site Setting Config Form Submit & Initialize
                ========================================================================== */
             const agencyForm = document.getElementById('agencySettingsForm');
-            const costInput = document.getElementById('setCost');
-            
-            const rateInputs = {
-                1: document.getElementById('rate1'),
-                2: document.getElementById('rate2'),
-                3: document.getElementById('rate3'),
-                4: document.getElementById('rate4'),
-                5: document.getElementById('rate5'),
-            };
-
             const agencyNameInput = document.getElementById('setAgencyName');
             const ownerInput = document.getElementById('setOwner');
             const phoneInput = document.getElementById('setPhone');
@@ -880,11 +824,130 @@
                 calculatorForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const newCalcSettings = {
-                        baseDailyCost: parseInt(costInput.value),
                         rates: {
-                            '1': parseInt(rateInputs[1].value),
-                            '2': parseInt(rateInputs[2].value),
-                            '3': parseInt(rateInputs[3].value),
+                            '1': parseInt(document.getElementById('rate1').value) || 2069900,
+                            '2': parseInt(document.getElementById('rate2').value) || 1869600,
+                            '3': parseInt(document.getElementById('rate3').value) || 1450000,
+                            '4': parseInt(document.getElementById('rate4').value) || 1409700,
+                            '5': parseInt(document.getElementById('rate5').value) || 1150000,
+                            '6': parseInt(document.getElementById('rate6').value) || 640000,
+                            '0': 0
+                        },
+                        unitCosts: {
+                            visit30: parseInt(document.getElementById('visitCost30').value) || 16840,
+                            visit60: parseInt(document.getElementById('visitCost60').value) || 25320,
+                            visit90: parseInt(document.getElementById('visitCost90').value) || 34220,
+                            visit120: parseInt(document.getElementById('visitCost120').value) || 43150,
+                            visit180: parseInt(document.getElementById('visitCost180').value) || 56120,
+                            bath: parseInt(document.getElementById('bathCost').value) || 80000,
+                            dayCare: parseInt(document.getElementById('dayCareCost').value) || 65000,
+                            facility: parseInt(document.getElementById('facilityCost').value) || 85000
+                        }
+                    };
+                    localStorage.setItem('gaon_calculator_settings', JSON.stringify(newCalcSettings));
+                    alert('장기요양 본인부담금 및 급여 한도/단가 설정이 성공적으로 저장되었습니다.\n홈페이지 계산기 로직 및 요율에 즉시 반영됩니다.');
+                });
+            }
+
+            // Save Greetings details
+            if (greetingForm) {
+                greetingForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
+                    settings.greetingTitle = greetingTitleInput.value.trim().replace(/\n/g, '<br>');
+                    settings.greetingContent = greetingContentInput.value.trim();
+                    settings.greetingPosition = greetingPositionInput.value.trim();
+                    settings.greetingDirectorName = greetingDirectorNameInput.value.trim();
+                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
+                    alert('기관장 인사말 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 인사말에 실시간 연동됩니다.');
+                });
+            }
+
+            // Save Center History details
+            if (historyForm) {
+                historyForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
+                    settings.historyText = historyTextInput.value.trim();
+                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
+                    alert('기관 연혁 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 연혁 영역에 실시간 연동됩니다.');
+                });
+            }
+
+            // Set initial site configs
+            function initSettingsForms() {
+                // Settings Form
+                const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
+                if (agencyNameInput) agencyNameInput.value = settings.agencyName || '가온복지센터';
+                if (ownerInput) ownerInput.value = settings.owner || '최대웅';
+                if (phoneInput) phoneInput.value = settings.phone || '063-584-7072';
+                if (addressInput) addressInput.value = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
+                if (sloganInput) sloganInput.value = settings.slogan !== undefined ? settings.slogan : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
+                if (hoursWeekdayInput) hoursWeekdayInput.value = settings.hoursWeekday !== undefined ? settings.hoursWeekday : '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
+                if (hoursWeekendInput) hoursWeekendInput.value = settings.hoursWeekend !== undefined ? settings.hoursWeekend : '24시간 전화 상담 대기';
+                if (faxInput) faxInput.value = settings.fax !== undefined ? settings.fax : '063-584-7073';
+                if (emailInput) emailInput.value = settings.email !== undefined ? settings.email : 'gaon7072@naver.com';
+                if (snsBlogInput) snsBlogInput.value = settings.snsBlog || '';
+                if (snsKakaoInput) snsKakaoInput.value = settings.snsKakao || 'http://pf.kakao.com/_xfxmvXn';
+                if (snsYoutubeInput) snsYoutubeInput.value = settings.snsYoutube || '';
+
+                // Greetings Form Init
+                greetingTitleInput.value = (settings.greetingTitle !== undefined ? settings.greetingTitle : '어르신의 행복한 노후<br>가온복지센터가 든든한 동반자가 되겠습니다.').replace(/<br\s*\/?>/gi, '\n');
+                
+                const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
+                greetingContentInput.value = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
+                
+                greetingPositionInput.value = settings.greetingPosition !== undefined ? settings.greetingPosition : '센터장';
+                greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '최대웅');
+
+                // History Form Init
+                const defaultHistory = `2018.08 - 국민건강보험공단 노인장기요양 기관 지정\n2018.08 - 가온복지센터 방문요양 시작\n2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정\n2021.08 - 가온복지센터 방문목욕 시작`;
+                historyTextInput.value = settings.historyText !== undefined ? settings.historyText : defaultHistory;
+
+                // Calculator Form Init
+                const defaultRates = { '1': 2069900, '2': 1869600, '3': 1450000, '4': 1409700, '5': 1150000, '6': 640000, '0': 0 };
+                const defaultUnitCosts = {
+                    visit30: 16840,
+                    visit60: 25320,
+                    visit90: 34220,
+                    visit120: 43150,
+                    visit180: 56120,
+                    bath: 80000,
+                    dayCare: 65000,
+                    facility: 85000
+                };
+
+                const calcSettings = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {
+                    rates: defaultRates,
+                    unitCosts: defaultUnitCosts
+                };
+
+                const rates = calcSettings.rates || defaultRates;
+                const unitCosts = calcSettings.unitCosts || defaultUnitCosts;
+
+                if (document.getElementById('rate1')) document.getElementById('rate1').value = rates['1'] || defaultRates['1'];
+                if (document.getElementById('rate2')) document.getElementById('rate2').value = rates['2'] || defaultRates['2'];
+                if (document.getElementById('rate3')) document.getElementById('rate3').value = rates['3'] || defaultRates['3'];
+                if (document.getElementById('rate4')) document.getElementById('rate4').value = rates['4'] || defaultRates['4'];
+                if (document.getElementById('rate5')) document.getElementById('rate5').value = rates['5'] || defaultRates['5'];
+                if (document.getElementById('rate6')) document.getElementById('rate6').value = rates['6'] || defaultRates['6'];
+
+                if (document.getElementById('visitCost30')) document.getElementById('visitCost30').value = unitCosts.visit30 || defaultUnitCosts.visit30;
+                if (document.getElementById('visitCost60')) document.getElementById('visitCost60').value = unitCosts.visit60 || defaultUnitCosts.visit60;
+                if (document.getElementById('visitCost90')) document.getElementById('visitCost90').value = unitCosts.visit90 || defaultUnitCosts.visit90;
+                if (document.getElementById('visitCost120')) document.getElementById('visitCost120').value = unitCosts.visit120 || defaultUnitCosts.visit120;
+                if (document.getElementById('visitCost180')) document.getElementById('visitCost180').value = unitCosts.visit180 || defaultUnitCosts.visit180;
+                if (document.getElementById('bathCost')) document.getElementById('bathCost').value = unitCosts.bath || defaultUnitCosts.bath;
+                if (document.getElementById('dayCareCost')) document.getElementById('dayCareCost').value = unitCosts.dayCare || defaultUnitCosts.dayCare;
+                if (document.getElementById('facilityCost')) document.getElementById('facilityCost').value = unitCosts.facility || defaultUnitCosts.facility;
+            }ntById('visitCost60').value = unitCosts.visit60 || defaultUnitCosts.visit60;
+                if (document.getElementById('visitCost90')) document.getElementById('visitCost90').value = unitCosts.visit90 || defaultUnitCosts.visit90;
+                if (document.getElementById('visitCost120')) document.getElementById('visitCost120').value = unitCosts.visit120 || defaultUnitCosts.visit120;
+                if (document.getElementById('visitCost180')) document.getElementById('visitCost180').value = unitCosts.visit180 || defaultUnitCosts.visit180;
+                if (document.getElementById('bathCost')) document.getElementById('bathCost').value = unitCosts.bath || defaultUnitCosts.bath;
+                if (document.getElementById('dayCareCost')) document.getElementById('dayCareCost').value = unitCosts.dayCare || defaultUnitCosts.dayCare;
+                if (document.getElementById('facilityCost')) document.getElementById('facilityCost').value = unitCosts.facility || defaultUnitCosts.facility;
+            }                          '3': parseInt(rateInputs[3].value),
                             '4': parseInt(rateInputs[4].value),
                             '5': parseInt(rateInputs[5].value),
                         }

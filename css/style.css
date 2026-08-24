@@ -3766,5 +3766,284 @@ h1, h2, h3, h4 {
     }
 }
 
+/* ==========================================================================
+   Long-Term Care Copayment Calculator Modern UI (2026 Format)
+   ========================================================================== */
+
+/* Category Switcher Tabs */
+.calc-type-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.calc-tab-btn {
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 30px;
+    background-color: #ffffff;
+    color: var(--color-text-main);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-sm);
+}
+
+.calc-tab-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+}
+
+.calc-tab-btn.active {
+    background-color: #1e5a48;
+    color: #ffffff;
+    border-color: #1e5a48;
+    box-shadow: 0 4px 14px rgba(30, 90, 72, 0.25);
+}
+
+/* Calculator Container & Step Cards */
+.calc-card-step {
+    background: #ffffff;
+    border: 1px solid #e8ede9;
+    border-radius: var(--border-radius-md);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.calc-step-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #1e5a48;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.calc-step-title .step-num {
+    background: #1e5a48;
+    color: #ffffff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.calc-step-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+/* Grade Preview Table */
+.calc-grade-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+
+.calc-grade-summary-table th, 
+.calc-grade-summary-table td {
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 0.92rem;
+}
+
+.calc-grade-summary-table th {
+    background-color: #f7f9f8;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    width: 35%;
+    border-right: 1px solid var(--color-border);
+}
+
+.calc-grade-summary-table td {
+    background-color: #ffffff;
+    color: var(--color-text-main);
+    font-weight: 700;
+}
+
+/* Custom Dotted Add Button */
+.btn-add-service-dotted {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed #cbd5e1;
+    border-radius: var(--border-radius-sm);
+    background-color: #fafbfc;
+    color: var(--color-text-main);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-add-service-dotted:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+    background-color: #f0fdf8;
+}
+
+/* Dynamic Service Card Item */
+.service-item-card {
+    background: #fffdfa;
+    border: 1.5px solid #f0e6d8;
+    border-radius: var(--border-radius-sm);
+    padding: 16px;
+    margin-bottom: 14px;
+    position: relative;
+}
+
+.service-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.service-item-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-delete-service {
+    color: #e53e3e;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 6px;
+}
+
+.btn-delete-service:hover {
+    text-decoration: underline;
+}
+
+.service-item-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 580px) {
+    .service-item-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.service-item-subtotal {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #e8ded0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.service-item-subtotal span {
+    color: #cf752e;
+    font-size: 1.05rem;
+}
+
+/* Calculation Breakdown & Margin Pill Badge */
+.calc-breakdown-box {
+    background: #faf8f5;
+    border: 1px solid #ebdcd0;
+    border-radius: var(--border-radius-sm);
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.calc-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: var(--color-text-muted);
+}
+
+.calc-breakdown-row.total-row {
+    font-weight: 700;
+    color: var(--color-text-main);
+    font-size: 0.98rem;
+    border-top: 1px solid #e0d2c4;
+    padding-top: 8px;
+    margin-top: 8px;
+}
+
+.calc-status-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 30px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-top: 12px;
+    text-align: center;
+}
+
+.calc-status-badge.status-ok {
+    background-color: #e6f4ea;
+    color: #1e7e34;
+    border: 1px solid #b7e1cd;
+}
+
+.calc-status-badge.status-over {
+    background-color: #fce8e6;
+    color: #c5221f;
+    border: 1px solid #f5c2c0;
+}
+
+/* Final Out of Pocket Payment Row */
+.calc-final-copay-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    margin-top: 12px;
+    border-top: 2px solid var(--color-border);
+}
+
+.calc-final-copay-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.calc-final-copay-value {
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: #1e5a48;
+    font-family: 'Outfit', sans-serif;
+}
+
+
 
 
