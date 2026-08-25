@@ -553,10 +553,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // 서비스 횟수 안내
+    // 서비스 횟수 안내 및 계산 설정
     const SERVICE_INFO = {
-        요양: '서비스 횟수: 요양 최 5회/일 (1일 기준)',
-        목욕: '서비스 횟수: 목욕 월 2회 이용 기본'
+        요양: {
+            info: '서비스 횟수: 요양 기본 주 5회 (월 20회 기준)',
+            subtext: '(요양 기본 주 5회)',
+            multiplier: 20
+        },
+        목욕: {
+            info: '서비스 횟수: 목욕 기본 월 2회 기준',
+            subtext: '(목욕 기본 월 2회)',
+            multiplier: 2
+        }
     };
 
     function runNewCalc() {
@@ -587,20 +595,25 @@ document.addEventListener('DOMContentLoaded', () => {
             unitCost = CALC_RATES.목욕[serviceTimeVal] || 0;
         }
 
-        // 공단부담 / 본인부담 계산
+        // 공단부담 / 본인부담 계산 (1회 기준)
         const govCost    = Math.round(unitCost * (1 - copayRate));
         const copayAmt   = Math.round(unitCost * copayRate);
+
+        // 예상 월 본인부담금 계산 (요양: 주 5회 = 월 20회 / 목욕: 월 2회)
+        const infoConfig = SERVICE_INFO[serviceType] || SERVICE_INFO['요양'];
+        const totalMonthlyCopay = copayAmt * infoConfig.multiplier;
 
         // 결과 표시
         const el = (id) => document.getElementById(id);
         if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
         if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
         if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
-        if (el('outOfPocketVal')) el('outOfPocketVal').textContent = copayAmt.toLocaleString() + '원';
+        if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
+        if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = infoConfig.subtext;
 
         // 서비스 횟수 안내
         if (el('serviceInfoText')) {
-            el('serviceInfoText').textContent = SERVICE_INFO[serviceType];
+            el('serviceInfoText').textContent = infoConfig.info;
         }
     }
 
