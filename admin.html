@@ -738,7 +738,10 @@
                 s.mapAddress = document.getElementById('setMapAddress').value.trim();
                 s.serviceAreas = document.getElementById('setServiceAreas').value.trim();
                 localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('지도 및 서�            // Expose actions globally for inline html events
+                alert('지도 및 서비스 지역 설정이 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
+            });
+
+            // Expose actions globally for inline html events
             window.changeLeadStatus = function(id, status) {
                 const leads = JSON.parse(localStorage.getItem('gaon_consultations')) || [];
                 const targetIdx = leads.findIndex(l => l.id === id);
@@ -940,16 +943,31 @@
                 if (document.getElementById('bathCost')) document.getElementById('bathCost').value = unitCosts.bath || defaultUnitCosts.bath;
                 if (document.getElementById('dayCareCost')) document.getElementById('dayCareCost').value = unitCosts.dayCare || defaultUnitCosts.dayCare;
                 if (document.getElementById('facilityCost')) document.getElementById('facilityCost').value = unitCosts.facility || defaultUnitCosts.facility;
-            }ntById('visitCost60').value = unitCosts.visit60 || defaultUnitCosts.visit60;
-                if (document.getElementById('visitCost90')) document.getElementById('visitCost90').value = unitCosts.visit90 || defaultUnitCosts.visit90;
-                if (document.getElementById('visitCost120')) document.getElementById('visitCost120').value = unitCosts.visit120 || defaultUnitCosts.visit120;
-                if (document.getElementById('visitCost180')) document.getElementById('visitCost180').value = unitCosts.visit180 || defaultUnitCosts.visit180;
-                if (document.getElementById('bathCost')) document.getElementById('bathCost').value = unitCosts.bath || defaultUnitCosts.bath;
-                if (document.getElementById('dayCareCost')) document.getElementById('dayCareCost').value = unitCosts.dayCare || defaultUnitCosts.dayCare;
-                if (document.getElementById('facilityCost')) document.getElementById('facilityCost').value = unitCosts.facility || defaultUnitCosts.facility;
-            }                          '3': parseInt(rateInputs[3].value),
-                            '4': parseInt(rateInputs[4].value),
-                            '5': parseInt(rateInputs[5].value),
+            }
+
+            // Save Calculator settings
+            const calculatorSettingsForm = document.getElementById('calculatorSettingsForm');
+            if (calculatorSettingsForm) {
+                calculatorSettingsForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const newCalcSettings = {
+                        rates: {
+                            '1': parseInt(document.getElementById('rate1')?.value || 0),
+                            '2': parseInt(document.getElementById('rate2')?.value || 0),
+                            '3': parseInt(document.getElementById('rate3')?.value || 0),
+                            '4': parseInt(document.getElementById('rate4')?.value || 0),
+                            '5': parseInt(document.getElementById('rate5')?.value || 0),
+                            '6': parseInt(document.getElementById('rate6')?.value || 0),
+                        },
+                        unitCosts: {
+                            visit30: parseInt(document.getElementById('visitCost30')?.value || 0),
+                            visit60: parseInt(document.getElementById('visitCost60')?.value || 0),
+                            visit90: parseInt(document.getElementById('visitCost90')?.value || 0),
+                            visit120: parseInt(document.getElementById('visitCost120')?.value || 0),
+                            visit180: parseInt(document.getElementById('visitCost180')?.value || 0),
+                            bath: parseInt(document.getElementById('bathCost')?.value || 0),
+                            dayCare: parseInt(document.getElementById('dayCareCost')?.value || 0),
+                            facility: parseInt(document.getElementById('facilityCost')?.value || 0)
                         }
                     };
                     localStorage.setItem('gaon_calculator_settings', JSON.stringify(newCalcSettings));
@@ -1002,7 +1020,7 @@
                 // Greetings Form Init
                 greetingTitleInput.value = (settings.greetingTitle !== undefined ? settings.greetingTitle : '어르신의 행복한 노후<br>가온복지센터가 든든한 동반자가 되겠습니다.').replace(/<br\s*\/?>/gi, '\n');
                 
-                const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니���. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
+                const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
                 greetingContentInput.value = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
                 
                 greetingPositionInput.value = settings.greetingPosition !== undefined ? settings.greetingPosition : '센터장';

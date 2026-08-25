@@ -51,9 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
             changed = true;
         }
         
-        const targetAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면\n위도면';
-        if (settings.serviceAreas !== targetAreas) {
-            settings.serviceAreas = targetAreas;
+        const targetAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
+        if (!settings.serviceAreas || settings.serviceAreas.includes('위도면') || settings.serviceAreas !== targetAreas) {
+            settings.serviceAreas = (settings.serviceAreas || targetAreas).replace(/\r?\n?위도면/g, '').trim();
+            if (!settings.serviceAreas) settings.serviceAreas = targetAreas;
             changed = true;
         }
         if (!settings.hasClearedExamples) {
@@ -314,8 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mapEmbed.src = `https://maps.google.com/maps?q=${encodedAddr}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
         }
         if (serviceAreaTags) {
-            const defaultAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면\n위도면';
-            const rawAreas = settings.serviceAreas || defaultAreas;
+            const defaultAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
+            const rawAreas = (settings.serviceAreas || defaultAreas).replace(/\r?\n?위도면/g, '');
             serviceAreaTags.innerHTML = rawAreas.split('\n')
                 .map(a => a.trim()).filter(a => a)
                 .map(a => `<span class="area-tag"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(a)}</span>`).join('');
@@ -555,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 서비스 횟수 안내
     const SERVICE_INFO = {
         요양: '서비스 횟수: 요양 최 5회/일 (1일 기준)',
-        목욕: '서비스 횟수: 목욕 월 2회 이용 가능'
+        목욕: '서비스 횟수: 목욕 월 2회 이용 기본'
     };
 
     function runNewCalc() {
