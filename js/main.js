@@ -542,8 +542,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const unitCosts = saved.unitCosts || {};
 
         const bathLongCost = unitCosts.bath || 85400;
-        // 40분~60분 미만은 60분 이상 단가의 85% 자동 산정 (단가가 지정된 경우 해당값 사용)
-        const bathShortCost = Math.round(bathLongCost * 0.85);
+        // 40분~60분 미만은 60분 이상 단가의 80% 자동 산정
+        const bathShortCost = Math.round(bathLongCost * 0.80);
 
         return {
             요양: {
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 180: unitCosts.visit180 || 56120
             },
             목욕: {
-                bath_short: bathShortCost, // 차량 내 40분~60분 미만 (85% 자동계산)
+                bath_short: bathShortCost, // 차량 내 40분~60분 미만 (80% 자동계산)
                 bath_long:  bathLongCost   // 차량 내 60분 이상
             }
         };
