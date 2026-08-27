@@ -536,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
        3. 본인부담금 계산기 Logic (새 형식: 서비스 구분 / 시간 / 등급 / 합계)
        ========================================================================== */
 
-    // 관리자 설정 또는 기본 2026 보건복지부 고시 단가 가져오기
+    // 관리자 설정 또는 기본 국민건강보험공단 고시 단가 가져오기
     function getCalcRates() {
         const saved = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {};
         const unitCosts = saved.unitCosts || {};
