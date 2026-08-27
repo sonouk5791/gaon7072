@@ -4333,3 +4333,50 @@ h1, h2, h3, h4 {
     background: linear-gradient(135deg, #f0fdf9, #ffffff);
     border-color: #b7e5d0;
 }
+
+/* ============================================================
+   우측 하단 플로팅 관리자 배너/버튼 스타일
+   ============================================================ */
+.floating-admin-badge {
+    position: fixed;
+    bottom: 85px;
+    right: 24px;
+    z-index: 990;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #1e5a48, #134133);
+    color: #ffffff !important;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-radius: 30px;
+    box-shadow: 0 6px 20px rgba(30, 90, 72, 0.35);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    letter-spacing: 0.02em;
+}
+
+.floating-admin-badge i {
+    font-size: 1rem;
+    color: #6ee7b7;
+}
+
+.floating-admin-badge:hover {
+    background: linear-gradient(135deg, #27735c, #1a5241);
+    color: #ffffff !important;
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 28px rgba(30, 90, 72, 0.5);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+    .floating-admin-badge {
+        bottom: 80px;
+        right: 16px;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+}
