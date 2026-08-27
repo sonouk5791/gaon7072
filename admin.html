@@ -271,10 +271,6 @@
                             </h3>
                             <div style="display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 30분 단가</span>
-                                    <input type="number" id="visitCost30" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                                     <span style="font-size: 0.88rem; font-weight: 600;">방문요양 60분 단가</span>
                                     <input type="number" id="visitCost60" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
                                 </div>
@@ -832,7 +828,6 @@
                             '0': 0
                         },
                         unitCosts: {
-                            visit30: parseInt(document.getElementById('visitCost30').value) || 16840,
                             visit60: parseInt(document.getElementById('visitCost60').value) || 25320,
                             visit90: parseInt(document.getElementById('visitCost90').value) || 34220,
                             visit120: parseInt(document.getElementById('visitCost120').value) || 43150,
@@ -903,7 +898,6 @@
                 // Calculator Form Init
                 const defaultRates = { '1': 2069900, '2': 1869600, '3': 1450000, '4': 1409700, '5': 1150000, '6': 640000, '0': 0 };
                 const defaultUnitCosts = {
-                    visit30: 16840,
                     visit60: 25320,
                     visit90: 34220,
                     visit120: 43150,
@@ -926,7 +920,6 @@
                 if (document.getElementById('rate5')) document.getElementById('rate5').value = rates['5'] || defaultRates['5'];
                 if (document.getElementById('rate6')) document.getElementById('rate6').value = rates['6'] || defaultRates['6'];
 
-                if (document.getElementById('visitCost30')) document.getElementById('visitCost30').value = unitCosts.visit30 || defaultUnitCosts.visit30;
                 if (document.getElementById('visitCost60')) document.getElementById('visitCost60').value = unitCosts.visit60 || defaultUnitCosts.visit60;
                 if (document.getElementById('visitCost90')) document.getElementById('visitCost90').value = unitCosts.visit90 || defaultUnitCosts.visit90;
                 if (document.getElementById('visitCost120')) document.getElementById('visitCost120').value = unitCosts.visit120 || defaultUnitCosts.visit120;
@@ -949,7 +942,6 @@
                             '6': parseInt(document.getElementById('rate6')?.value || 0),
                         },
                         unitCosts: {
-                            visit30: parseInt(document.getElementById('visitCost30')?.value || 0),
                             visit60: parseInt(document.getElementById('visitCost60')?.value || 0),
                             visit90: parseInt(document.getElementById('visitCost90')?.value || 0),
                             visit120: parseInt(document.getElementById('visitCost120')?.value || 0),

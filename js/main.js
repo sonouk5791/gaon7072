@@ -547,7 +547,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             요양: {
-                30:  unitCosts.visit30  || 16840,
                 60:  unitCosts.visit60  || 25320,
                 90:  unitCosts.visit90  || 34220,
                 120: unitCosts.visit120 || 43150,
