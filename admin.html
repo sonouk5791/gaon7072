@@ -291,16 +291,11 @@
                                     <input type="number" id="visitCost180" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
                                 </div>
                                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문목욕 1회 단가</span>
+                                    <span style="font-size: 0.88rem; font-weight: 600;">방문목욕 단가 (60분 이상 기준)</span>
                                     <input type="number" id="bathCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">주야간보호 1일(8시간) 단가</span>
-                                    <input type="number" id="dayCareCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">시설급여 1일 기준 단가</span>
-                                    <input type="number" id="facilityCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
+                                <div style="font-size: 0.78rem; color: var(--color-text-muted); text-align: right; margin-top: -4px;">
+                                    ※ 40분 이상~60분 미만 단가는 60분 이상 단가의 85%로 자동 산정됩니다.
                                 </div>
                             </div>
                         </div>
@@ -842,9 +837,7 @@
                             visit90: parseInt(document.getElementById('visitCost90').value) || 34220,
                             visit120: parseInt(document.getElementById('visitCost120').value) || 43150,
                             visit180: parseInt(document.getElementById('visitCost180').value) || 56120,
-                            bath: parseInt(document.getElementById('bathCost').value) || 80000,
-                            dayCare: parseInt(document.getElementById('dayCareCost').value) || 65000,
-                            facility: parseInt(document.getElementById('facilityCost').value) || 85000
+                            bath: parseInt(document.getElementById('bathCost').value) || 85400
                         }
                     };
                     localStorage.setItem('gaon_calculator_settings', JSON.stringify(newCalcSettings));
@@ -915,9 +908,7 @@
                     visit90: 34220,
                     visit120: 43150,
                     visit180: 56120,
-                    bath: 80000,
-                    dayCare: 65000,
-                    facility: 85000
+                    bath: 85400
                 };
 
                 const calcSettings = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {
@@ -941,8 +932,6 @@
                 if (document.getElementById('visitCost120')) document.getElementById('visitCost120').value = unitCosts.visit120 || defaultUnitCosts.visit120;
                 if (document.getElementById('visitCost180')) document.getElementById('visitCost180').value = unitCosts.visit180 || defaultUnitCosts.visit180;
                 if (document.getElementById('bathCost')) document.getElementById('bathCost').value = unitCosts.bath || defaultUnitCosts.bath;
-                if (document.getElementById('dayCareCost')) document.getElementById('dayCareCost').value = unitCosts.dayCare || defaultUnitCosts.dayCare;
-                if (document.getElementById('facilityCost')) document.getElementById('facilityCost').value = unitCosts.facility || defaultUnitCosts.facility;
             }
 
             // Save Calculator settings
@@ -965,9 +954,7 @@
                             visit90: parseInt(document.getElementById('visitCost90')?.value || 0),
                             visit120: parseInt(document.getElementById('visitCost120')?.value || 0),
                             visit180: parseInt(document.getElementById('visitCost180')?.value || 0),
-                            bath: parseInt(document.getElementById('bathCost')?.value || 0),
-                            dayCare: parseInt(document.getElementById('dayCareCost')?.value || 0),
-                            facility: parseInt(document.getElementById('facilityCost')?.value || 0)
+                            bath: parseInt(document.getElementById('bathCost')?.value || 0)
                         }
                     };
                     localStorage.setItem('gaon_calculator_settings', JSON.stringify(newCalcSettings));

@@ -4049,11 +4049,11 @@ h1, h2, h3, h4 {
    NEW CALCULATOR STYLES (서비스 구분 / 시간 / 등급 / 합계)
    ============================================================ */
 
-/* 서비스 구분 - 요양/목욕 라디오 카드 */
+/* 서비스 구분 - 요양/목욕/요양+목욕 라디오 카드 */
 .calc-service-type-group {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
     margin-top: 4px;
 }
 
@@ -4062,17 +4062,18 @@ h1, h2, h3, h4 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 18px 12px;
+    gap: 6px;
+    padding: 16px 8px;
     border: 2px solid #e2e8f0;
     border-radius: 14px;
     background: #fff;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-muted);
     transition: all 0.2s ease;
     position: relative;
+    text-align: center;
 }
 
 .calc-radio-card input[type="radio"] {

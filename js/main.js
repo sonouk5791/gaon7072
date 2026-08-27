@@ -536,84 +536,115 @@ document.addEventListener('DOMContentLoaded', () => {
        3. 본인부담금 계산기 Logic (새 형식: 서비스 구분 / 시간 / 등급 / 합계)
        ========================================================================== */
 
-    // 2026 보건복지부 고시 단가 (원/회)
-    const CALC_RATES = {
-        // 요양: { 시간(분): 단가 }
-        요양: {
-            60:  45750,
-            90:  57260,
-            120: 68820,
-            150: 80380,
-            180: 91890
-        },
-        // 목욕: { 구분: 단가 }
-        목욕: {
-            bath_short: 76530,  // 차량 내 40분~60분 미만
-            bath_long:  85400   // 차량 내 60분 이상
-        }
-    };
+    // 관리자 설정 또는 기본 2026 보건복지부 고시 단가 가져오기
+    function getCalcRates() {
+        const saved = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {};
+        const unitCosts = saved.unitCosts || {};
 
-    // 서비스 횟수 안내 및 계산 설정
-    const SERVICE_INFO = {
-        요양: {
-            info: '서비스 횟수: 요양 기본 주 5회 (월 20회 기준)',
-            subtext: '(요양 기본 주 5회)',
-            multiplier: 20
-        },
-        목욕: {
-            info: '서비스 횟수: 목욕 기본 월 2회 기준',
-            subtext: '(목욕 기본 월 2회)',
-            multiplier: 2
-        }
-    };
+        const bathLongCost = unitCosts.bath || 85400;
+        // 40분~60분 미만은 60분 이상 단가의 85% 자동 산정 (단가가 지정된 경우 해당값 사용)
+        const bathShortCost = Math.round(bathLongCost * 0.85);
+
+        return {
+            요양: {
+                30:  unitCosts.visit30  || 16840,
+                60:  unitCosts.visit60  || 25320,
+                90:  unitCosts.visit90  || 34220,
+                120: unitCosts.visit120 || 43150,
+                150: 80380,
+                180: unitCosts.visit180 || 56120
+            },
+            목욕: {
+                bath_short: bathShortCost, // 차량 내 40분~60분 미만 (85% 자동계산)
+                bath_long:  bathLongCost   // 차량 내 60분 이상
+            }
+        };
+    }
 
     function runNewCalc() {
+        const CALC_RATES = getCalcRates();
+
         // 1) 서비스 구분
         const serviceTypeRadio = document.querySelector('input[name="serviceType"]:checked');
         if (!serviceTypeRadio) return;
         const serviceType = serviceTypeRadio.value;
 
-        // 2) 서비스 시간
-        const serviceTimeRadio = document.querySelector('input[name="serviceTime"]:checked');
-        if (!serviceTimeRadio) return;
-        const serviceTimeVal = serviceTimeRadio.value;
-
-        // 3) 등급
+        // 2) 등급
         const gradeRadio = document.querySelector('input[name="careGrade"]:checked');
         if (!gradeRadio) return;
-        const grade = gradeRadio.value;
 
-        // 4) 본인부담률
+        // 3) 본인부담률
         const copaySelect = document.getElementById('copayRatio');
         const copayRate = copaySelect ? parseFloat(copaySelect.value) / 100 : 0.15;
 
-        // 단가 계산
-        let unitCost = 0;
-        if (serviceType === '요양') {
-            unitCost = CALC_RATES.요양[parseInt(serviceTimeVal)] || 0;
-        } else {
-            unitCost = CALC_RATES.목욕[serviceTimeVal] || 0;
-        }
-
-        // 공단부담 / 본인부담 계산 (1회 기준)
-        const govCost    = Math.round(unitCost * (1 - copayRate));
-        const copayAmt   = Math.round(unitCost * copayRate);
-
-        // 예상 월 본인부담금 계산 (요양: 주 5회 = 월 20회 / 목욕: 월 2회)
-        const infoConfig = SERVICE_INFO[serviceType] || SERVICE_INFO['요양'];
-        const totalMonthlyCopay = copayAmt * infoConfig.multiplier;
-
-        // 결과 표시
         const el = (id) => document.getElementById(id);
-        if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
-        if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
-        if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
-        if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
-        if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = infoConfig.subtext;
 
-        // 서비스 횟수 안내
-        if (el('serviceInfoText')) {
-            el('serviceInfoText').textContent = infoConfig.info;
+        if (serviceType === '요양+목욕') {
+            // 요양 시간 & 목욕 시간 모두 수집
+            const yoyangTimeRadio = document.querySelector('input[name="serviceTime"]:checked');
+            // 만약 선택된 시간 radio가 요양에 속하지 않으면 기본 60분
+            let yoyangVal = '60';
+            if (yoyangTimeRadio && ['60','90','120','150','180'].includes(yoyangTimeRadio.value)) {
+                yoyangVal = yoyangTimeRadio.value;
+            }
+
+            let bathVal = 'bath_long';
+            // 목욕 radio 체크 상태 구하기
+            const bathRadios = document.querySelectorAll('#mogyokTimeOptions input[name="serviceTime"]');
+            bathRadios.forEach(r => {
+                if (r.checked) bathVal = r.value;
+            });
+
+            const yoyangUnit = CALC_RATES.요양[parseInt(yoyangVal)] || 45750;
+            const bathUnit   = CALC_RATES.목욕[bathVal] || 85400;
+
+            const yoyangGov   = Math.round(yoyangUnit * (1 - copayRate));
+            const yoyangCopay = Math.round(yoyangUnit * copayRate);
+
+            const bathGov   = Math.round(bathUnit * (1 - copayRate));
+            const bathCopay = Math.round(bathUnit * copayRate);
+
+            // 월 본인부담금: 요양 20회(주 5회) + 목욕 2회
+            const totalMonthlyCopay = (yoyangCopay * 20) + (bathCopay * 2);
+
+            if (el('newUnitCost')) el('newUnitCost').innerHTML = `요양 ${yoyangUnit.toLocaleString()}원<br>목욕 ${bathUnit.toLocaleString()}원`;
+            if (el('newGovCost'))  el('newGovCost').innerHTML  = `요양 ${yoyangGov.toLocaleString()}원<br>목욕 ${bathGov.toLocaleString()}원`;
+            if (el('newCopay'))    el('newCopay').innerHTML    = `요양 ${yoyangCopay.toLocaleString()}원<br>목욕 ${bathCopay.toLocaleString()}원`;
+            if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
+            if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = '(요양 주 5회 + 목욕 월 2회)';
+            if (el('serviceInfoText')) el('serviceInfoText').textContent = '서비스 횟수: 요양 기본 주 5회 (월 20회) + 목욕 기본 월 2회';
+
+        } else if (serviceType === '요양') {
+            const serviceTimeRadio = document.querySelector('#yoyangTimeOptions input[name="serviceTime"]:checked') || document.querySelector('input[name="serviceTime"]:checked');
+            const serviceTimeVal = serviceTimeRadio ? serviceTimeRadio.value : '60';
+
+            const unitCost = CALC_RATES.요양[parseInt(serviceTimeVal)] || 0;
+            const govCost  = Math.round(unitCost * (1 - copayRate));
+            const copayAmt = Math.round(unitCost * copayRate);
+            const totalMonthlyCopay = copayAmt * 20;
+
+            if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
+            if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
+            if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
+            if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
+            if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = '(요양 기본 주 5회)';
+            if (el('serviceInfoText')) el('serviceInfoText').textContent = '서비스 횟수: 요양 기본 주 5회 (월 20회 기준)';
+
+        } else { // 목욕
+            const serviceTimeRadio = document.querySelector('#mogyokTimeOptions input[name="serviceTime"]:checked') || document.querySelector('input[name="serviceTime"]:checked');
+            const serviceTimeVal = serviceTimeRadio ? serviceTimeRadio.value : 'bath_long';
+
+            const unitCost = CALC_RATES.목욕[serviceTimeVal] || 0;
+            const govCost  = Math.round(unitCost * (1 - copayRate));
+            const copayAmt = Math.round(unitCost * copayRate);
+            const totalMonthlyCopay = copayAmt * 2;
+
+            if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
+            if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
+            if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
+            if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
+            if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = '(목욕 기본 월 2회)';
+            if (el('serviceInfoText')) el('serviceInfoText').textContent = '서비스 횟수: 목욕 기본 월 2회 기준';
         }
     }
 
@@ -622,7 +653,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards = document.querySelectorAll(containerSelector);
         cards.forEach(card => {
             card.addEventListener('click', () => {
-                cards.forEach(c => c.classList.remove('active'));
+                const parentDiv = card.parentElement;
+                if (parentDiv) {
+                    parentDiv.querySelectorAll(containerSelector).forEach(c => c.classList.remove('active'));
+                }
                 card.classList.add('active');
                 runNewCalc();
             });
@@ -646,22 +680,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (type === '요양') {
                 if (yoyangOpts) yoyangOpts.style.display = '';
                 if (mogyokOpts) mogyokOpts.style.display = 'none';
-                // 기본 선택: 60분
                 const firstTime = document.getElementById('time60');
                 if (firstTime) {
                     firstTime.checked = true;
-                    document.querySelectorAll('.calc-time-card').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('#yoyangTimeOptions .calc-time-card').forEach(c => c.classList.remove('active'));
                     firstTime.closest('.calc-time-card') && firstTime.closest('.calc-time-card').classList.add('active');
                 }
-            } else {
+            } else if (type === '목욕') {
                 if (yoyangOpts) yoyangOpts.style.display = 'none';
                 if (mogyokOpts) mogyokOpts.style.display = '';
-                // 기본 선택: 60분이상
                 const bathDefault = document.getElementById('bathLong');
                 if (bathDefault) {
                     bathDefault.checked = true;
-                    document.querySelectorAll('.calc-time-card--bath').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('#mogyokTimeOptions .calc-time-card--bath').forEach(c => c.classList.remove('active'));
                     bathDefault.closest('.calc-time-card--bath') && bathDefault.closest('.calc-time-card--bath').classList.add('active');
+                }
+            } else if (type === '요양+목욕') {
+                if (yoyangOpts) yoyangOpts.style.display = '';
+                if (mogyokOpts) mogyokOpts.style.display = '';
+                const firstTime = document.getElementById('time60');
+                if (firstTime && !document.querySelector('#yoyangTimeOptions input:checked')) {
+                    firstTime.checked = true;
+                }
+                const bathDefault = document.getElementById('bathLong');
+                if (bathDefault && !document.querySelector('#mogyokTimeOptions input:checked')) {
+                    bathDefault.checked = true;
                 }
             }
             runNewCalc();
