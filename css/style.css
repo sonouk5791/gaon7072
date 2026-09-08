@@ -2159,6 +2159,22 @@ h1, h2, h3, h4 {
     color: var(--color-text-light);
 }
 
+.btn-admin-edit {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.btn-admin-edit:hover {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.admin-faq-item:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
 /* Form layout for Admin Settings */
 .admin-form-grid {
     display: grid;
@@ -4108,7 +4124,7 @@ h1, h2, h3, h4 {
     color: #1e5a48;
 }
 
-/* 서비스 시간 - 요양 (6개 버튼 한 줄 배치) */
+/* 서비스 시간 - 요양 (시간 버튼 균등 한 줄 배치) */
 .calc-time-grid {
     display: flex;
     flex-wrap: nowrap;

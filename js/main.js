@@ -353,18 +353,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let faqData;
             try { 
-                let storedFaq = currentSettings.faq ? JSON.parse(currentSettings.faq) : defaultFaq; 
-                faqData = storedFaq
-                    .filter(item => !item.q.includes('주말') && !item.q.includes('공휴일'))
-                    .map(item => {
-                        if (item.q.includes('남성 요양보호사')) {
-                            item.a = '현재 전국의 요양보호사 인력 중 남성 요양보호사의 비율이 매우 낮아, 남성 요양보호사 매칭은 현실적으로 쉽지 않으며 대기 시간이 오래 걸리거나 즉각적인 매칭이 어려울 수 있습니다. 사전에 센터로 문의해 주시면 당시 인력 현황을 확인하여 최대한 안내와 조정을 도와드리겠습니다.';
-                        }
-                        if (item.q.includes('요양등급이 아직 없는데')) {
-                            item.a = '국가지원(노인장기요양보험)을 통한 방문요양 및 방문목욕 서비스는 장기요양등급을 판정받으신 어르신만 이용이 가능하므로, 등급 없이는 즉각적인 국가지원 서비스 이용이 불가능합니다. 다만, 가온복지센터에서 등급 신청 서류 준비 및 신청 상담 등을 상세히 지원해 드리고 있으니, 등급이 없으시더라도 먼저 센터로 연락 주시면 등급 신청 절차를 친절히 안내해 드리겠습니다.';
-                        }
-                        return item;
-                    });
+                let storedFaq = currentSettings.faq ? (typeof currentSettings.faq === 'string' ? JSON.parse(currentSettings.faq) : currentSettings.faq) : defaultFaq; 
+                faqData = Array.isArray(storedFaq) ? storedFaq : defaultFaq;
             } catch (e) { 
                 faqData = defaultFaq; 
             }
@@ -552,9 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 90:  unitCosts.visit90  || 34120,
                 120: unitCosts.visit120 || 43430,
                 150: unitCosts.visit150 || 50640,
-                180: unitCosts.visit180 || 57020,
-                210: unitCosts.visit210 || 63530,
-                240: unitCosts.visit240 || 70080
+                180: unitCosts.visit180 || 57020
             },
             목욕: {
                 bath_short: bathShortCost, // 차량 내 40분 미만 (88,990원의 80% = 71,192원)
@@ -618,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const yoyangTimeRadio = document.querySelector('input[name="serviceTime"]:checked');
             // 만약 선택된 시간 radio가 요양에 속하지 않으면 기본 90분
             let yoyangVal = '90';
-            if (yoyangTimeRadio && ['30','60','90','120','150','180','210','240'].includes(yoyangTimeRadio.value)) {
+            if (yoyangTimeRadio && ['30','60','90','120','150','180'].includes(yoyangTimeRadio.value)) {
                 yoyangVal = yoyangTimeRadio.value;
             }
 

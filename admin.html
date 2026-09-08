@@ -38,7 +38,10 @@
                 <i class="fa-solid fa-list-check"></i> 상담 신청 내역
             </button>
             <button class="admin-tab" data-tab="tabCalculator">
-                <i class="fa-solid fa-calculator"></i> 이용료 계산기 설정 (150분·210분 포함)
+                <i class="fa-solid fa-calculator"></i> 이용료 계산기 설정 (150분 포함)
+            </button>
+            <button class="admin-tab" data-tab="tabFaq">
+                <i class="fa-solid fa-circle-question"></i> 자주 묻는 질문 (Q&A) 관리
             </button>
             <button class="admin-tab" data-tab="tabSiteSettings">
                 <i class="fa-solid fa-building"></i> 기관 기본 설정
@@ -81,7 +84,7 @@
                 </div>
 
                 <form id="calcSettingsForm">
-                    <!-- ① 방문요양 서비스 단가 (150분 이상 / 210분 포함) -->
+                    <!-- ① 방문요양 서비스 단가 (150분 이상 포함) -->
                     <h3 style="font-size: 1.15rem; font-weight: 700; color: #1e5a48; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
                         <i class="fa-solid fa-hands-helping"></i> 방문요양 회당 서비스 단가 (원)
                     </h3>
@@ -111,16 +114,6 @@
                         <div class="form-group">
                             <label class="form-label" for="costVisit180">180분 이상 단가</label>
                             <input type="number" id="costVisit180" class="form-input" placeholder="57,020">
-                        </div>
-                        <div class="form-group" style="background: #f0fdf9; padding: 10px; border-radius: 8px; border: 1.5px solid #10b981;">
-                            <label class="form-label" for="costVisit210" style="color: #065f46; font-weight: 700;">
-                                <i class="fa-solid fa-star" style="color: #10b981;"></i> 210분 이상 단가
-                            </label>
-                            <input type="number" id="costVisit210" class="form-input" placeholder="63,530" style="font-weight: 700; color: #065f46;">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="costVisit240">240분 이상 단가</label>
-                            <input type="number" id="costVisit240" class="form-input" placeholder="70,080">
                         </div>
                     </div>
 
@@ -181,7 +174,68 @@
             </div>
         </div>
 
-        <!-- Tab 3: Site Settings -->
+        <!-- Tab 3: FAQ / Q&A Management -->
+        <div id="tabFaq" class="admin-tab-content">
+            <div class="admin-card">
+                <div class="admin-card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <i class="fa-solid fa-circle-question"></i> 자주 묻는 질문 (Q&A) 관리
+                    </div>
+                    <span id="adminFaqCount" class="status-badge progress" style="font-size: 0.9rem; padding: 6px 14px;">총 0개 항목</span>
+                </div>
+                <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.6;">
+                    홈페이지 메인 <strong>Q&A</strong> 영역에 노출되는 질문과 답변을 직접 등록, 수정, 순서 변경, 삭제할 수 있습니다.<br>
+                    변경 후 하단의 <strong>[설정 저장하기]</strong>를 누르시면 메인 페이지에 실시간 반영됩니다.
+                </p>
+
+                <!-- 새 질문 등록 카드 -->
+                <div class="admin-faq-add-card" style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 30px;">
+                    <h4 style="font-size: 1.05rem; font-weight: 700; color: #1e293b; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-plus-circle" style="color: var(--color-primary);"></i> 새 질문(Q&A) 등록
+                    </h4>
+                    <form id="addFaqForm">
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label class="form-label" for="newFaqQ" style="font-weight: 700;">
+                                <span style="color: #2563eb; margin-right: 4px;">Q.</span> 질문 내용
+                            </label>
+                            <input type="text" id="newFaqQ" class="form-input" placeholder="예: 요양보호사 선생님 매칭은 어떻게 진행되나요?" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label" for="newFaqA" style="font-weight: 700;">
+                                <span style="color: var(--color-primary); margin-right: 4px;">A.</span> 답변 내용
+                            </label>
+                            <textarea id="newFaqA" class="form-input" rows="4" placeholder="상세하고 친절한 답변 내용을 입력해 주세요." style="resize: vertical; font-family: inherit;" required></textarea>
+                        </div>
+                        <div style="text-align: right;">
+                            <button type="submit" class="btn-primary" style="padding: 10px 22px; font-weight: 700; border-radius: 8px;">
+                                <i class="fa-solid fa-plus"></i> 목록에 질문 추가
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Q&A 관리 리스트 -->
+                <h4 style="font-size: 1.1rem; font-weight: 700; color: #1e5a48; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                    <i class="fa-solid fa-list-ol"></i> 등록된 Q&A 목록 (순서대로 노출)
+                </h4>
+
+                <div id="adminFaqContainer" class="admin-faq-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px;">
+                    <!-- Injected by js/admin.js -->
+                </div>
+
+                <!-- 하단 액션 버튼 -->
+                <div class="admin-form-actions" style="margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                    <button type="button" id="resetFaqBtn" class="btn-admin-action btn-admin-danger" style="padding: 12px 20px;">
+                        <i class="fa-solid fa-rotate-left"></i> 기본 Q&A로 복원
+                    </button>
+                    <button type="button" id="saveAllFaqBtn" class="btn-primary" style="padding: 12px 28px; border-radius: 8px; font-weight: 700;">
+                        <i class="fa-solid fa-floppy-disk"></i> Q&A 설정 저장하기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Site Settings -->
         <div id="tabSiteSettings" class="admin-tab-content">
             <div class="admin-card">
                 <div class="admin-card-title">
