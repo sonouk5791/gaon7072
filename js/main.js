@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 { 
                     q: '방문요양 한 달 예상 서비스 비용은 대략 어떻게 되나요?', 
-                    a: '국민건강보험공단 지원을 통해 본인부담금을 크게 줄일 수 있으며, 어르신의 장기요양 등급과 소득 수준(감경 여부)에 따라 본인이 실제 부담하시는 금액이 달라집니다. 홈페이지 하단의 지원금 계산기를 통해 모의 조회를 해보시거나, 정확한 비용은 센터로 전화 문의 주시면 맞춤 안내해 드리겠습니다.' 
+                    a: '국민건강보험공단 지원을 통해 본인부담금을 크게 줄일 수 있으며, 어르신의 장기요양 등급과 소득 수준(감경 여부)에 따라 본인이 실제 부담하시는 금액이 달라집니다. 홈페이지 하단의 이용료 계산기를 통해 모의 조회를 해보시거나, 정확한 비용은 센터로 전화 문의 주시면 맞춤 안내해 드리겠습니다.' 
                 }
             ];
 
@@ -541,24 +541,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const saved = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {};
         const unitCosts = saved.unitCosts || {};
 
-        const bathLongCost = unitCosts.bath || 85400;
-        // 40분~60분 미만은 60분 이상 단가의 80% 자동 산정
+        const bathLongCost = unitCosts.bath || 88990;
+        // 40분~60분 미만은 60분 이상 단가의 80% 자동 산정 (71,192원)
         const bathShortCost = Math.round(bathLongCost * 0.80);
 
         return {
             요양: {
+                30:  unitCosts.visit30  || 17450,
                 60:  unitCosts.visit60  || 25320,
-                90:  unitCosts.visit90  || 34220,
-                120: unitCosts.visit120 || 43150,
-                150: 80380,
-                180: unitCosts.visit180 || 56120
+                90:  unitCosts.visit90  || 34120,
+                120: unitCosts.visit120 || 43430,
+                150: unitCosts.visit150 || 50640,
+                180: unitCosts.visit180 || 57020,
+                210: unitCosts.visit210 || 63530,
+                240: unitCosts.visit240 || 70080
             },
             목욕: {
-                bath_short: bathShortCost, // 차량 내 40분~60분 미만 (80% 자동계산)
-                bath_long:  bathLongCost   // 차량 내 60분 이상
+                bath_short: bathShortCost, // 차량 내 40분 미만 (88,990원의 80% = 71,192원)
+                bath_long:  bathLongCost   // 차량 내 60분 이상 (88,990원)
             }
         };
     }
+
+    const SUGA_TABLE_DATA = {
+        '1': { limit: 2512900, copay: { 15: 376930, 9: 226160, 6: 150770, 0: 0 } },
+        '2': { limit: 2331200, copay: { 15: 349680, 9: 209800, 6: 139870, 0: 0 } },
+        '3': { limit: 1528200, copay: { 15: 229230, 9: 137530, 6: 91690, 0: 0 } },
+        '4': { limit: 1409700, copay: { 15: 211450, 9: 126870, 6: 84580, 0: 0 } },
+        '5': { limit: 1208900, copay: { 15: 181330, 9: 108800, 6: 72530, 0: 0 } }
+    };
 
     function runNewCalc() {
         const CALC_RATES = getCalcRates();
@@ -571,19 +582,43 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2) 등급
         const gradeRadio = document.querySelector('input[name="careGrade"]:checked');
         if (!gradeRadio) return;
+        const gradeVal = gradeRadio.value;
 
         // 3) 본인부담률
         const copaySelect = document.getElementById('copayRatio');
-        const copayRate = copaySelect ? parseFloat(copaySelect.value) / 100 : 0.15;
+        const copayInt = copaySelect ? parseInt(copaySelect.value) : 15;
+        const copayRate = copayInt / 100;
+
+        // Load monthly limits (rates) from localStorage or defaults
+        const savedSettings = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {};
+        const defaultRates = { '1': 2512900, '2': 2331200, '3': 1528200, '4': 1409700, '5': 1208900, '0': 0 };
+        const rates = savedSettings.rates || defaultRates;
+        const limit = rates[gradeVal] || (SUGA_TABLE_DATA[gradeVal] ? SUGA_TABLE_DATA[gradeVal].limit : 0);
 
         const el = (id) => document.getElementById(id);
+
+        // 선택 등급 월 한도액 및 사진 표 기준 본인부담금 표시
+        const sugaInfo = SUGA_TABLE_DATA[gradeVal];
+        if (sugaInfo) {
+            if (el('gradeLimitDisplay')) el('gradeLimitDisplay').textContent = sugaInfo.limit.toLocaleString() + '원';
+            const stdCopay = sugaInfo.copay[copayInt] !== undefined ? sugaInfo.copay[copayInt] : Math.round(sugaInfo.limit * copayRate);
+            if (el('gradeCopayDisplay')) el('gradeCopayDisplay').textContent = stdCopay.toLocaleString() + '원';
+        }
+
+        // Get checked monthly dates from calendar (default 20 if none)
+        const checkedDates = document.querySelectorAll('input[name="monthlyDate"]:checked');
+        const yoyangMonthlyCount = checkedDates.length > 0 ? checkedDates.length : 20;
+
+        if (el('monthlyCountBadge')) {
+            el('monthlyCountBadge').textContent = `월 ${yoyangMonthlyCount}회`;
+        }
 
         if (serviceType === '요양+목욕') {
             // 요양 시간 & 목욕 시간 모두 수집
             const yoyangTimeRadio = document.querySelector('input[name="serviceTime"]:checked');
-            // 만약 선택된 시간 radio가 요양에 속하지 않으면 기본 60분
-            let yoyangVal = '60';
-            if (yoyangTimeRadio && ['60','90','120','150','180'].includes(yoyangTimeRadio.value)) {
+            // 만약 선택된 시간 radio가 요양에 속하지 않으면 기본 90분
+            let yoyangVal = '90';
+            if (yoyangTimeRadio && ['30','60','90','120','150','180','210','240'].includes(yoyangTimeRadio.value)) {
                 yoyangVal = yoyangTimeRadio.value;
             }
 
@@ -603,49 +638,103 @@ document.addEventListener('DOMContentLoaded', () => {
             const bathGov   = Math.round(bathUnit * (1 - copayRate));
             const bathCopay = Math.round(bathUnit * copayRate);
 
-            // 월 본인부담금: 요양 20회(주 5회) + 목욕 2회
-            const totalMonthlyCopay = (yoyangCopay * 20) + (bathCopay * 2);
+            // 월 총액: 요양 (월 N회) + 목욕 2회
+            const totalMonthlyCost = (yoyangUnit * yoyangMonthlyCount) + (bathUnit * 2);
+            // 공단 부담금 계산: 한도액 내에서만 지원
+            const govContribution = Math.round(Math.min(totalMonthlyCost, limit) * (1 - copayRate));
+            const totalMonthlyCopay = totalMonthlyCost - govContribution;
 
             if (el('newUnitCost')) el('newUnitCost').innerHTML = `요양 ${yoyangUnit.toLocaleString()}원<br>목욕 ${bathUnit.toLocaleString()}원`;
             if (el('newGovCost'))  el('newGovCost').innerHTML  = `요양 ${yoyangGov.toLocaleString()}원<br>목욕 ${bathGov.toLocaleString()}원`;
             if (el('newCopay'))    el('newCopay').innerHTML    = `요양 ${yoyangCopay.toLocaleString()}원<br>목욕 ${bathCopay.toLocaleString()}원`;
             if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
-            if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = '(요양 주 5회 + 목욕 월 2회)';
-            if (el('serviceInfoText')) el('serviceInfoText').textContent = '서비스 횟수: 요양 기본 주 5회 (월 20회) + 목욕 기본 월 2회';
+            
+            let isOverLimit = totalMonthlyCost > limit;
+            let subtext = `(요양 월 ${yoyangMonthlyCount}회 + 목욕 월 2회)`;
+            if (isOverLimit) {
+                subtext += ` <span style="color: #e53e3e; font-weight: 700; display: block; margin-top: 4px;">(※ 한도 초과액 ${(totalMonthlyCost - limit).toLocaleString()}원 포함)</span>`;
+            }
+            if (el('copayFreqSubtext')) el('copayFreqSubtext').innerHTML = subtext;
+            if (el('serviceInfoText')) el('serviceInfoText').textContent = `서비스 횟수: 요양 월 ${yoyangMonthlyCount}회 + 목욕 기본 월 2회`;
+            // 목욕 안내 박스 처리
+            const compareBox1 = document.getElementById('bathMonthlyCompare');
+            if (compareBox1) compareBox1.style.display = 'none';
 
         } else if (serviceType === '요양') {
             const serviceTimeRadio = document.querySelector('#yoyangTimeOptions input[name="serviceTime"]:checked') || document.querySelector('input[name="serviceTime"]:checked');
-            const serviceTimeVal = serviceTimeRadio ? serviceTimeRadio.value : '60';
+            const serviceTimeVal = serviceTimeRadio ? serviceTimeRadio.value : '90';
 
             const unitCost = CALC_RATES.요양[parseInt(serviceTimeVal)] || 0;
             const govCost  = Math.round(unitCost * (1 - copayRate));
             const copayAmt = Math.round(unitCost * copayRate);
-            const totalMonthlyCopay = copayAmt * 20;
+            
+            // 월 총액: 요양 (월 N회)
+            const totalMonthlyCost = unitCost * yoyangMonthlyCount;
+            // 공단 부담금 계산: 한도액 내에서만 지원
+            const govContribution = Math.round(Math.min(totalMonthlyCost, limit) * (1 - copayRate));
+            const totalMonthlyCopay = totalMonthlyCost - govContribution;
 
             if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
             if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
             if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
             if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
-            if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = '(요양 기본 주 5회)';
-            if (el('serviceInfoText')) el('serviceInfoText').textContent = '서비스 횟수: 요양 기본 주 5회 (월 20회 기준)';
+            
+            let isOverLimit = totalMonthlyCost > limit;
+            let subtext = `(요양 월 ${yoyangMonthlyCount}회)`;
+            if (isOverLimit) {
+                subtext += ` <span style="color: #e53e3e; font-weight: 700; display: block; margin-top: 4px;">(※ 한도 초과액 ${(totalMonthlyCost - limit).toLocaleString()}원 포함)</span>`;
+            }
+            if (el('copayFreqSubtext')) el('copayFreqSubtext').innerHTML = subtext;
+            if (el('serviceInfoText')) el('serviceInfoText').textContent = `서비스 횟수: 요양 월 ${yoyangMonthlyCount}회 기준`;
+            // 목욕 안내 박스 처리
+            const compareBox2 = document.getElementById('bathMonthlyCompare');
+            if (compareBox2) compareBox2.style.display = 'none';
 
         } else { // 목욕
             const serviceTimeRadio = document.querySelector('#mogyokTimeOptions input[name="serviceTime"]:checked') || document.querySelector('input[name="serviceTime"]:checked');
             const serviceTimeVal = serviceTimeRadio ? serviceTimeRadio.value : 'bath_long';
 
+            // 선택된 월 이용 횟수 읽기 (기본 2회)
+            const bathCountRadio = document.querySelector('input[name="bathMonthlyCount"]:checked');
+            const bathMonthlyCount = bathCountRadio ? parseInt(bathCountRadio.value) : 2;
+
             const unitCost = CALC_RATES.목욕[serviceTimeVal] || 0;
             const govCost  = Math.round(unitCost * (1 - copayRate));
             const copayAmt = Math.round(unitCost * copayRate);
-            const totalMonthlyCopay = copayAmt * 2;
 
+            // 선택된 횟수 기준 월 총액 계산
+            const totalMonthlyCost = unitCost * bathMonthlyCount;
+            const govContribution  = Math.round(Math.min(totalMonthlyCost, limit) * (1 - copayRate));
+            const totalMonthlyCopay = totalMonthlyCost - govContribution;
+
+            // 단가 행
             if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
             if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
             if (el('newCopay'))    el('newCopay').textContent    = copayAmt.toLocaleString() + '원';
+
+            // 월 본인부담금 (선택된 횟수 기준)
             if (el('outOfPocketVal')) el('outOfPocketVal').textContent = totalMonthlyCopay.toLocaleString() + '원';
-            if (el('copayFreqSubtext')) el('copayFreqSubtext').textContent = '(목욕 기본 월 2회)';
-            if (el('serviceInfoText')) el('serviceInfoText').textContent = '서비스 횟수: 목욕 기본 월 2회 기준';
+
+            let isOverLimit = totalMonthlyCost > limit;
+            let subtext = `(목욕 월 ${bathMonthlyCount}회 기준)`;
+            if (isOverLimit) {
+                subtext += ` <span style="color: #e53e3e; font-weight: 700; display: block; margin-top: 4px;">(※ 한도 초과액 ${(totalMonthlyCost - limit).toLocaleString()}원 포함)</span>`;
+            }
+            if (el('copayFreqSubtext')) el('copayFreqSubtext').innerHTML = subtext;
+            if (el('serviceInfoText')) el('serviceInfoText').textContent = `서비스 횟수: 목욕 월 ${bathMonthlyCount}회 기준`;
         }
     }
+
+    // 목욕 월 이용 횟수 선택 시 active 토글 + 재계산
+    document.querySelectorAll('input[name="bathMonthlyCount"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            document.querySelectorAll('label[id^="bathCount"]').forEach(l => l.classList.remove('active'));
+            const parentLabel = radio.closest('label');
+            if (parentLabel) parentLabel.classList.add('active');
+            calculateCopay();
+        });
+    });
+
 
     // 카드 클릭 → active 토글 + 계산
     function initCalcCardGroup(name, containerSelector) {
@@ -720,14 +809,91 @@ document.addEventListener('DOMContentLoaded', () => {
     const copaySelectEl = document.getElementById('copayRatio');
     if (copaySelectEl) copaySelectEl.addEventListener('change', runNewCalc);
 
+    // 2026 수가 안내 표 행 클릭 시 등급 선택 동기화
+    document.querySelectorAll('.suga-table tbody tr').forEach(tr => {
+        tr.addEventListener('click', () => {
+            const grade = tr.getAttribute('data-suga-grade');
+            if (!grade) return;
+            const targetRadio = document.getElementById(`grade${grade}`);
+            if (targetRadio) {
+                targetRadio.checked = true;
+                document.querySelectorAll('.calc-grade-card').forEach(c => c.classList.remove('active'));
+                if (targetRadio.closest('.calc-grade-card')) {
+                    targetRadio.closest('.calc-grade-card').classList.add('active');
+                }
+                runNewCalc();
+            }
+        });
+    });
+
     // 초기 active 상태 설정
     const defaultServiceType = document.querySelector('.calc-radio-card');
     if (defaultServiceType) defaultServiceType.classList.add('active');
 
-    const defaultTime = document.getElementById('time60');
+    const defaultTime = document.getElementById('time90');
     if (defaultTime && defaultTime.closest('.calc-time-card')) {
         defaultTime.closest('.calc-time-card').classList.add('active');
     }
+
+    // 달력 날짜 카드 클릭 핸들러 (다중 선택/해제 및 active 토글)
+    const monthDateCards = document.querySelectorAll('.calc-month-date');
+    monthDateCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+                updatePresetButtonsState();
+                runNewCalc();
+            }
+        });
+    });
+
+    // 캘린더 프리셋 버튼 (평일 선택, 전체 선택, 전체 해제)
+    const presetWeekdaysBtn = document.getElementById('presetWeekdays');
+    const presetAllBtn = document.getElementById('presetAll');
+    const presetClearBtn = document.getElementById('presetClear');
+
+    function setPresetSelection(type) {
+        monthDateCards.forEach(card => {
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            if (!checkbox) return;
+            const isSun = card.classList.contains('sun');
+            const isSat = card.classList.contains('sat');
+
+            if (type === 'weekdays') {
+                checkbox.checked = (!isSun && !isSat && checkbox.value !== '30');
+            } else if (type === 'all') {
+                checkbox.checked = true;
+            } else if (type === 'clear') {
+                checkbox.checked = false;
+            }
+
+            if (checkbox.checked) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+        updatePresetButtonsState(type);
+        runNewCalc();
+    }
+
+    function updatePresetButtonsState(activeType = null) {
+        [presetWeekdaysBtn, presetAllBtn, presetClearBtn].forEach(b => b && b.classList.remove('active'));
+        if (activeType === 'weekdays' && presetWeekdaysBtn) presetWeekdaysBtn.classList.add('active');
+        if (activeType === 'all' && presetAllBtn) presetAllBtn.classList.add('active');
+        if (activeType === 'clear' && presetClearBtn) presetClearBtn.classList.add('active');
+    }
+
+    if (presetWeekdaysBtn) presetWeekdaysBtn.addEventListener('click', () => setPresetSelection('weekdays'));
+    if (presetAllBtn) presetAllBtn.addEventListener('click', () => setPresetSelection('all'));
+    if (presetClearBtn) presetClearBtn.addEventListener('click', () => setPresetSelection('clear'));
 
     const defaultGrade = document.getElementById('grade4');
     if (defaultGrade && defaultGrade.closest('.calc-grade-card')) {

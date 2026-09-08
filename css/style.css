@@ -4108,29 +4108,31 @@ h1, h2, h3, h4 {
     color: #1e5a48;
 }
 
-/* 서비스 시간 - 요양 (5개 버튼) */
+/* 서비스 시간 - 요양 (6개 버튼 한 줄 배치) */
 .calc-time-grid {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-wrap: nowrap;
+    gap: 6px;
+    width: 100%;
 }
 
 .calc-time-card {
-    flex: 1;
-    min-width: 64px;
+    flex: 1 1 0%;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 12px 6px;
+    padding: 10px 4px;
     border: 2px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: 10px;
     background: #fff;
     cursor: pointer;
     font-weight: 700;
     color: #64748b;
     transition: all 0.2s ease;
     position: relative;
+    white-space: nowrap;
 }
 
 .calc-time-card input[type="radio"] {
@@ -4140,7 +4142,7 @@ h1, h2, h3, h4 {
 }
 
 .calc-time-card .time-min {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 700;
     color: inherit;
 }
@@ -4207,8 +4209,8 @@ h1, h2, h3, h4 {
 /* 등급 선택 그리드 */
 .calc-grade-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
 }
 
 .calc-grade-card {
@@ -4371,3 +4373,297 @@ h1, h2, h3, h4 {
         margin-top: 10px !important;
     }
 }
+
+/* Footer Admin Bar (copyright 하단 관리자 버튼 영역) */
+.footer-admin-bar {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 0;
+}
+
+/* Monthly Calendar Format */
+.calc-calendar-presets {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.btn-calc-preset {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 16px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-calc-preset:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+    background: #f0fdf8;
+}
+
+.btn-calc-preset.active {
+    background: var(--color-primary-dark);
+    color: #ffffff;
+    border-color: var(--color-primary-dark);
+}
+
+.calc-month-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.calc-month-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.calc-month-header .sun {
+    color: #dc2626;
+}
+
+.calc-month-header .sat {
+    color: #2563eb;
+}
+
+.calc-month-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.calc-month-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.calc-month-date.sun {
+    color: #dc2626;
+}
+
+.calc-month-date.sat {
+    color: #2563eb;
+}
+
+.calc-month-date:hover {
+    border-color: var(--color-primary);
+    background: #f0fdf8;
+}
+
+.calc-month-date.active {
+    border-color: #1e5a48;
+    background: linear-gradient(135deg, #1e5a48, #2d8a6a);
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(30, 90, 72, 0.2);
+}
+
+.calc-month-date.sun.active {
+    border-color: #b91c1c;
+    background: linear-gradient(135deg, #b91c1c, #ef4444);
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(185, 28, 28, 0.2);
+}
+
+.calc-month-date.sat.active {
+    border-color: #1d4ed8;
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #ffffff !important;
+    box-shadow: 0 2px 6px rgba(29, 78, 216, 0.2);
+}
+
+/* ==========================================================================
+   2026년 수가 안내 (재가급여 월 한도액 및 본인부담금) 표 스타일
+   ========================================================================== */
+.suga-guide-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    padding: 24px 28px;
+    transition: all 0.3s ease;
+}
+
+.suga-guide-header {
+    margin-bottom: 18px;
+}
+
+.suga-guide-title {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.suga-badge {
+    color: #b8145c;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+}
+
+.suga-main-heading {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.suga-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+}
+
+.suga-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 680px;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.suga-table thead tr {
+    background: linear-gradient(135deg, #44ba67, #2ea451);
+    color: #ffffff;
+}
+
+.suga-table th {
+    padding: 14px 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: -0.2px;
+}
+
+.suga-table th:last-child {
+    border-right: none;
+}
+
+.suga-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.suga-table tbody tr:nth-child(even) {
+    background-color: #f8faf9;
+}
+
+.suga-table tbody tr:hover {
+    background-color: #e6f7f0 !important;
+}
+
+.suga-table tbody tr.active-row {
+    background-color: #d1fae5 !important;
+    font-weight: 700;
+}
+
+.suga-table td {
+    padding: 13px 12px;
+    border-right: 1px solid #edf2f7;
+    color: #334155;
+    font-variant-numeric: tabular-nums;
+}
+
+.suga-table td:last-child {
+    border-right: none;
+}
+
+.suga-table td.td-grade {
+    font-weight: 800;
+    color: #2e7d32;
+    font-size: 1rem;
+}
+
+.suga-table td.td-limit {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.suga-table td.td-copay {
+    color: #334155;
+    font-weight: 600;
+}
+
+.suga-table td.td-free {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .suga-guide-card {
+        padding: 18px 16px;
+    }
+    .calc-grade-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+}
+
+/* ==========================================================================
+   이용료 계산하기 & 간편상담 신청 개별 독립 섹션 레이아웃
+   ========================================================================== */
+.calculator-section {
+    padding: 70px 0;
+    background-color: #ffffff;
+}
+
+.consultation-section {
+    padding: 70px 0;
+    background-color: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.calculator-box {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    padding: 36px 32px;
+}
+
+.consultation-form-box {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    padding: 40px 36px;
+}
+
+@media (max-width: 768px) {
+    .calculator-box,
+    .consultation-form-box {
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+}
+
+
+

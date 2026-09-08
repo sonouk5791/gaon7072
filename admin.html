@@ -3,1064 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 대시보드 | 가온복지센터</title>
-    
-    <!-- Google Fonts -->
+    <title>관리자 모드 | 가온복지센터</title>
+    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Gowun+Batang:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Shared Style -->
+    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="background-color: var(--color-bg-base); min-height: 100vh; display: flex; flex-direction: column;">
+<body style="background-color: #f1f5f9; min-height: 100vh;">
 
-    <!-- Admin Top Navigation -->
+    <!-- Admin Navigation Bar -->
     <header class="admin-navbar">
-        <a href="#" class="logo-text" style="font-family: var(--font-warm); font-weight: 700; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-hand-holding-heart"></i> 가온복지센터 <span>관리자 시스템</span>
-        </a>
+        <div class="logo-text">
+            <strong>가온복지센터</strong> <span>관리자모드</span>
+        </div>
         <div class="admin-nav-actions">
-            <span style="font-size: 0.9rem; color: var(--color-primary-light); font-weight: 500;"><i class="fa-solid fa-user-shield"></i> 최고관리자 모드</span>
             <a href="index.html" class="admin-nav-btn"><i class="fa-solid fa-house"></i> 홈페이지 바로가기</a>
         </div>
     </header>
 
-    <main class="admin-container" style="flex-grow: 1;">
-        <!-- Header Title Section -->
+    <div class="admin-container">
+        <!-- Title Area -->
         <div class="admin-title-area">
             <h1 class="admin-title">
-                <i class="fa-solid fa-chart-line"></i> 실시간 관리자 대시보드
+                <i class="fa-solid fa-sliders" style="color: var(--color-primary);"></i> 통합 관리자 센터
             </h1>
-            <div style="font-size: 0.95rem; color: var(--color-text-muted); font-weight: 500;">
-                현재 일시: <span id="currentTime" style="font-family: 'Outfit', sans-serif; font-weight: 600;">2026-08-08 09:25</span>
-            </div>
         </div>
 
-        <!-- Dashboard Tab Buttons -->
+        <!-- Navigation Tabs -->
         <div class="admin-tabs">
-            <button class="admin-tab active" id="leadsTabBtn"><i class="fa-solid fa-list-check"></i> 상담 신청 내역 관리</button>
-            <button class="admin-tab" id="settingsTabBtn"><i class="fa-solid fa-sliders"></i> 기관 정보 설정</button>
-            <button class="admin-tab" id="contentTabBtn"><i class="fa-solid fa-pen-ruler"></i> 홈페이지 콘텐츠 관리</button>
+            <button class="admin-tab active" data-tab="tabConsultations">
+                <i class="fa-solid fa-list-check"></i> 상담 신청 내역
+            </button>
+            <button class="admin-tab" data-tab="tabCalculator">
+                <i class="fa-solid fa-calculator"></i> 이용료 계산기 설정 (150분·210분 포함)
+            </button>
+            <button class="admin-tab" data-tab="tabSiteSettings">
+                <i class="fa-solid fa-building"></i> 기관 기본 설정
+            </button>
         </div>
 
-        <!-- TAB 1: Leads Management -->
-        <section class="admin-tab-content active" id="leadsTabContent">
-            <!-- Stats Widget Cards -->
-            <div class="admin-stat-grid">
-                <!-- Stat 1: Total -->
-                <div class="admin-stat-card">
-                    <div class="admin-stat-info">
-                        <h4>총 접수 건수</h4>
-                        <div class="stat-num" id="statTotalCount">0</div>
-                    </div>
-                    <div class="admin-stat-icon"><i class="fa-solid fa-folder-open"></i></div>
-                </div>
-                <!-- Stat 2: Waiting -->
-                <div class="admin-stat-card orange">
-                    <div class="admin-stat-info">
-                        <h4>상담 대기 건수</h4>
-                        <div class="stat-num" id="statWaitingCount">0</div>
-                    </div>
-                    <div class="admin-stat-icon"><i class="fa-solid fa-clock"></i></div>
-                </div>
-                <!-- Stat 3: Completed -->
-                <div class="admin-stat-card">
-                    <div class="admin-stat-info">
-                        <h4>상담 완료 건수</h4>
-                        <div class="stat-num" id="statCompletedCount">0</div>
-                    </div>
-                    <div class="admin-stat-icon" style="color: #27ae60; background-color: rgba(39, 174, 96, 0.1);"><i class="fa-solid fa-circle-check"></i></div>
-                </div>
-            </div>
-
-            <!-- Leads Management List Card -->
+        <!-- Tab 1: Consultation Requests -->
+        <div id="tabConsultations" class="admin-tab-content active">
             <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <h2 class="admin-card-title" style="margin-bottom: 0;"><i class="fa-solid fa-users"></i> 상담 접수 고객 명단</h2>
-                    <button class="btn-primary" id="exportCsvBtn" style="padding: 10px 20px; font-size: 0.9rem; border-radius: var(--border-radius-sm);"><i class="fa-solid fa-file-excel"></i> 엑셀 내보내기</button>
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-headset"></i> 간편 상담 신청 접수 목록
                 </div>
-                
                 <div class="table-responsive">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th style="width: 60px; text-align: center;">번호</th>
-                                <th style="width: 100px;">보호자명</th>
-                                <th style="width: 130px;">연락처</th>
-                                <th style="width: 120px;">어르신 연령대</th>
-                                <th style="width: 160px;">필요 서비스</th>
-                                <th>상담 문의내용</th>
-                                <th style="width: 150px;">신청일시</th>
-                                <th style="width: 120px; text-align: center;">상태 변경</th>
-                                <th style="width: 80px; text-align: center;">삭제</th>
+                                <th>접수일시</th>
+                                <th>보호자명</th>
+                                <th>연락처</th>
+                                <th>어르신 연령</th>
+                                <th>요청 서비스</th>
+                                <th>문의사항</th>
+                                <th>처리 상태</th>
+                                <th>관리</th>
                             </tr>
                         </thead>
-                        <tbody id="leadsTableBody">
-                            <!-- Rows will be injected dynamically -->
+                        <tbody id="consultationTableBody">
+                            <!-- Injected by js/admin.js -->
                         </tbody>
                     </table>
-                    <div id="noLeadsState" class="empty-state" style="display: none;">
-                        <i class="fa-solid fa-clipboard-question"></i>
-                        <p>접수된 상담 신청 내역이 없습니다.</p>
-                    </div>
                 </div>
-            </div>
-        </section>
-
-
-
-        <!-- TAB 2: Settings Configuration -->
-        <section class="admin-tab-content" id="settingsTabContent">
-            <div class="admin-form-grid">
-                <!-- Card Left: Agency Site Config -->
-                <div class="admin-card">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-hotel"></i> 기관 기본 및 푸터 정보 설정</h2>
-                    <form id="agencySettingsForm" style="display: flex; flex-direction: column; gap: 24px;">
-                        <!-- Section 1: 기관 정보 -->
-                        <div>
-                            <h3 style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--color-primary-light); color: var(--color-primary-dark); display: flex; align-items: center; gap: 8px; font-weight: 700;">
-                                <i class="fa-solid fa-circle-info"></i> 기관 인적사항 및 기본정보
-                            </h3>
-                            <div class="admin-form-subgrid">
-                                <div class="form-group">
-                                    <label for="setAgencyName" class="form-label">기관명</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-hospital input-icon"></i>
-                                        <input type="text" id="setAgencyName" class="form-input" placeholder="예) 가온복지센터" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setOwner" class="form-label">대표자명</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-user-tie input-icon"></i>
-                                        <input type="text" id="setOwner" class="form-input" placeholder="예) 최대웅" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setPhone" class="form-label">대표 연락처 (고객센터)</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-phone input-icon"></i>
-                                        <input type="text" id="setPhone" class="form-input" placeholder="예) 063-584-7072" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group grid-span-2">
-                                    <label for="setAddress" class="form-label">소재지 주소</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-location-dot input-icon"></i>
-                                        <input type="text" id="setAddress" class="form-input" placeholder="예) 전북특별자치도 부안군 부안읍 용계길 13" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Section 2: 푸터 세부 설정 -->
-                        <div style="margin-top: 10px;">
-                            <h3 style="font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--color-primary-light); color: var(--color-primary-dark); display: flex; align-items: center; gap: 8px; font-weight: 700;">
-                                <i class="fa-solid fa-signs-post"></i> 홈페이지 푸터 세부 설정
-                            </h3>
-                            <div class="admin-form-subgrid">
-                                <div class="form-group grid-span-2">
-                                    <label for="setSlogan" class="form-label">브랜드 슬로건</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-quote-left input-icon"></i>
-                                        <input type="text" id="setSlogan" class="form-input" placeholder="예) 내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다." required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setHoursWeekday" class="form-label">평일 운영시간</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-calendar-day input-icon"></i>
-                                        <input type="text" id="setHoursWeekday" class="form-input" placeholder="예) 08:00 ~ 17:00 (17:00 이후 센터장 연결)" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setHoursWeekend" class="form-label">주말/공휴일 운영시간</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-calendar-week input-icon"></i>
-                                        <input type="text" id="setHoursWeekend" class="form-input" placeholder="예) 24시간 전화 상담 대기" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setFax" class="form-label">팩스 번호</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-fax input-icon"></i>
-                                        <input type="text" id="setFax" class="form-input" placeholder="예) 063-584-7073" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setEmail" class="form-label">이메일 주소</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-envelope input-icon"></i>
-                                        <input type="email" id="setEmail" class="form-input" placeholder="예) gaon7072@naver.com" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setSnsBlog" class="form-label">SNS 블로그 링크</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-brands fa-blogger-b input-icon"></i>
-                                        <input type="text" id="setSnsBlog" class="form-input" placeholder="블로그 URL을 입력하세요. (없으면 #)" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="setSnsKakao" class="form-label">SNS 카카오톡 채널 링크</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-comment-dots input-icon"></i>
-                                        <input type="text" id="setSnsKakao" class="form-input" placeholder="카카오톡 채널 URL을 입력하세요. (없으면 #)" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                                <div class="form-group grid-span-2">
-                                    <label for="setSnsYoutube" class="form-label">SNS 유튜브 채널 링크</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-brands fa-youtube input-icon"></i>
-                                        <input type="text" id="setSnsYoutube" class="form-input" placeholder="유튜브 채널 URL을 입력하세요. (없으면 #)" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-submit" style="margin-top: 10px; width: 100%;"><i class="fa-solid fa-circle-check"></i> 사이트 설정 정보 저장</button>
-                    </form>
-                </div>
-
-                <!-- Card Right: Calculator Config -->
-                <div class="admin-card">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-calculator"></i> 장기요양 본인부담금 및 요율 설정</h2>
-                    <form id="calculatorSettingsForm" style="display: flex; flex-direction: column; gap: 20px;">
-                        
-                        <!-- 1. 등급별 월 한도액 -->
-                        <div>
-                            <h3 style="font-size: 1rem; color: var(--color-primary-dark); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-percent"></i> 등급별 국가지원 월 한도액 설정
-                            </h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">1등급</span>
-                                    <input type="number" id="rate1" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">2등급</span>
-                                    <input type="number" id="rate2" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">3등급</span>
-                                    <input type="number" id="rate3" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">4등급</span>
-                                    <input type="number" id="rate4" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    <span style="font-weight: 600; font-size: 0.9rem; width: 65px;">5등급</span>
-                                    <input type="number" id="rate5" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; background: #fafdfc; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                    <span style="font-weight: 600; font-size: 0.85rem; width: 65px;">인지지원</span>
-                                    <input type="number" id="rate6" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; font-weight: 700;" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 2. 서비스별 기준 단가 설정 -->
-                        <div style="border-top: 1px dashed var(--color-border); padding-top: 15px;">
-                            <h3 style="font-size: 1rem; color: var(--color-primary-dark); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-coins"></i> 재가/시설 서비스별 단가 설정 (원)
-                            </h3>
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 60분 단가</span>
-                                    <input type="number" id="visitCost60" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 90분 단가</span>
-                                    <input type="number" id="visitCost90" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 120분 단가</span>
-                                    <input type="number" id="visitCost120" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문요양 180분 단가</span>
-                                    <input type="number" id="visitCost180" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                                    <span style="font-size: 0.88rem; font-weight: 600;">방문목욕 단가 (60분 이상 기준)</span>
-                                    <input type="number" id="bathCost" class="form-input" style="padding: 6px 10px; height: auto; text-align: right; width: 140px;" required>
-                                </div>
-                                <div style="font-size: 0.78rem; color: var(--color-text-muted); text-align: right; margin-top: -4px;">
-                                    ※ 40분 이상~60분 미만 단가는 60분 이상 단가의 80%로 자동 산정됩니다.
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Prominent Save Button -->
-                        <button type="submit" id="btnSaveCalcSettings" class="btn-submit" style="margin-top: 15px; width: 100%; font-size: 1.05rem; font-weight: 700; padding: 14px; background-color: var(--color-primary-dark); border-radius: var(--border-radius-sm);">
-                            <i class="fa-solid fa-floppy-disk"></i> 계산기 요율 및 한도 정보 저장
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Card Right - SubCard 2: Director's Greetings Config -->
-                <div class="admin-card" style="margin-top: 30px;">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-feather-pointed"></i> 기관장 인사말 설정</h2>
-                    <form id="greetingSettingsForm" style="display: flex; flex-direction: column; gap: 20px;">
-                        <div class="form-group">
-                            <label for="setGreetingTitle" class="form-label">인사말 제목</label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-heading input-icon"></i>
-                                <textarea id="setGreetingTitle" class="form-input" placeholder="예) 어르신의 행복한 노후&#10;가온복지센터가 든든한 동반자가 되겠습니다." required style="padding-left: 44px; padding-top: 12px; height: 68px; resize: none; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.5;"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="setGreetingContent" class="form-label">인사말 본문</label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-align-left input-icon" style="top: 15px;"></i>
-                                <textarea id="setGreetingContent" class="form-input" placeholder="인사말 내용을 입력해주세요. 줄바꿈이 그대로 반영됩니다." required style="padding-left: 44px; padding-top: 12px; height: 160px; resize: vertical; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.6;"></textarea>
-                            </div>
-                        </div>
-                        <div class="admin-form-subgrid">
-                            <div class="form-group">
-                                <label for="setGreetingPosition" class="form-label">작성자 직함</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-user-tag input-icon"></i>
-                                    <input type="text" id="setGreetingPosition" class="form-input" placeholder="예) 센터장" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="setGreetingDirectorName" class="form-label">작성자 이름</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-signature input-icon"></i>
-                                    <input type="text" id="setGreetingDirectorName" class="form-input" placeholder="예) 최대웅" required style="padding-left: 44px; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm);">
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 10px; width: 100%;"><i class="fa-solid fa-circle-check"></i> 인사말 정보 저장</button>
-                    </form>
-                </div>
-
-                <!-- Card Right - SubCard 3: Center History Config -->
-                <div class="admin-card" style="margin-top: 30px;">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-clock-rotate-left"></i> 기관 연혁 설정</h2>
-                    <form id="historySettingsForm" style="display: flex; flex-direction: column; gap: 20px;">
-                        <div class="form-group">
-                            <label for="setHistoryText" class="form-label">연혁 항목 목록</label>
-                            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 8px; line-height: 1.4;">
-                                * 한 줄에 하나의 연혁 항목을 입력해주세요.<br>
-                                * 형식: <strong>년도.월 - 내용</strong> (예: 2018.08 - 가온복지센터 방문요양 시작)
-                            </p>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-list-ul input-icon" style="top: 15px;"></i>
-                                <textarea id="setHistoryText" class="form-input" placeholder="예)&#10;2018.08 - 국민건강보험공단 노인장기요양 기관 지정&#10;2018.08 - 가온복지센터 방문요양 시작&#10;2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정&#10;2021.08 - 가온복지센터 방문목욕 시작" required style="padding-left: 44px; padding-top: 12px; height: 150px; resize: vertical; background-color: #fafdfc; border: 1.5px solid var(--color-border); border-radius: var(--border-radius-sm); font-family: inherit; line-height: 1.6;"></textarea>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 10px; width: 100%;"><i class="fa-solid fa-circle-check"></i> 연혁 정보 저장</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 3: Content Management -->
-        <section class="admin-tab-content" id="contentTabContent">
-            <div class="admin-cards-grid">
-
-                <!-- Card 1: User Reviews -->
-                <div class="admin-card" style="grid-column: 1 / -1;">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-star"></i> 이용자 후기 관리</h2>
-                    <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:16px;">이름, 대상자(예: 어머니 85세, 방문요양), 별점(1~5), 후기 내용을 입력하세요.</p>
-                    <div class="content-rows-container" id="reviewsRows"></div>
-                    <button class="btn-add-row" id="addReviewBtn" type="button"><i class="fa-solid fa-plus"></i> 후기 추가</button>
-                    <button type="button" class="btn-submit" id="saveReviewsBtn" style="margin-top:14px;width:100%;"><i class="fa-solid fa-circle-check"></i> 후기 목록 저장</button>
-                </div>
-
-                <!-- Card 2: Gallery -->
-                <div class="admin-card" style="grid-column: 1 / -1;">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-images"></i> 인증서 / 현장 사진 관리</h2>
-                    <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:16px;">이미지 URL과 캐션을 입력하세요. URL은 블로그, 구글 포토, 외부 이미지 주소 가능. 빈 URL 입력 시 플레이스홀더로 표시됩니다.</p>
-                    <div class="content-rows-container" id="galleryRows"></div>
-                    <button class="btn-add-row" id="addGalleryBtn" type="button"><i class="fa-solid fa-plus"></i> 사진 추가</button>
-                    <button type="button" class="btn-submit" id="saveGalleryBtn" style="margin-top:14px;width:100%;"><i class="fa-solid fa-circle-check"></i> 사진 목록 저장</button>
-                </div>
-
-                <!-- Card 3: Map & Service Area -->
-                <div class="admin-card">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-map-location-dot"></i> 지도 및 서비스 지역 설정</h2>
-                    <form id="mapSettingsForm" style="display:flex;flex-direction:column;gap:18px;">
-                        <div class="form-group">
-                            <label class="form-label" for="setMapAddress">센터 주소 <span style="font-weight:400;color:var(--color-text-muted);">(Google Maps 검색어로 사용됩니다)</span></label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-location-dot input-icon"></i>
-                                <input type="text" id="setMapAddress" class="form-input" placeholder="예) 전북특별자치도 부안군 부안읍 용계길 13" style="padding-left:44px;background:#fafdfc;border:1.5px solid var(--color-border);border-radius:var(--border-radius-sm);">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="setServiceAreas">서비스 가능 지역 <span style="font-weight:400;color:var(--color-text-muted);">(Enter 키로 구분 / 한 줄에 하나씩)</span></label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-map input-icon" style="top:15px;"></i>
-                                <textarea id="setServiceAreas" class="form-input" placeholder="예)&#10;부안읍&#10;주산면&#10;동진면" style="padding-left:44px;padding-top:12px;height:120px;resize:vertical;background:#fafdfc;border:1.5px solid var(--color-border);border-radius:var(--border-radius-sm);font-family:inherit;line-height:1.6;"></textarea>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="width:100%;"><i class="fa-solid fa-circle-check"></i> 지도 정보 저장</button>
-                    </form>
-                </div>
-
-                <!-- Card 4: FAQ -->
-                <div class="admin-card">
-                    <h2 class="admin-card-title"><i class="fa-solid fa-circle-question"></i> 문의사항 관리</h2>
-                    <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:16px;">질문(Q)과 답변(A)을 입력하세요. 헤드라인 클릭 시 펼치는 아코디언 방식으로 표시됩니다.</p>
-                    <div class="content-rows-container" id="faqRows"></div>
-                    <button class="btn-add-row" id="addFaqBtn" type="button"><i class="fa-solid fa-plus"></i> 문의사항 추가</button>
-                    <button type="button" class="btn-submit" id="saveFaqBtn" style="margin-top:14px;width:100%;"><i class="fa-solid fa-circle-check"></i> 문의사항 목록 저장</button>
-                </div>
-
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="main-footer" style="padding-bottom: 0;">
-        <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.05); padding: 20px 0;">
-            <div class="container">
-                <p class="copyright">&copy; 2026 가온복지센터 - 관리자 모드. All Rights Reserved.</p>
             </div>
         </div>
-    </footer>
 
-    <!-- Simple Custom Admin Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Migration: Replace old brand name references and update address/service areas in localStorage
-            try {
-                const rawSettings = localStorage.getItem('gaon_settings');
-                let settings = rawSettings ? JSON.parse(rawSettings) : {};
-                let changed = false;
-                
-                if (settings.agencyName === '가온' || settings.agencyName === '가온방문요양/방문목욕' || !settings.agencyName) {
-                    settings.agencyName = '가온복지센터';
-                    changed = true;
-                }
-                
-                if (!settings.address || settings.address.includes('13번지') || settings.address.includes('2호')) {
-                    settings.address = (settings.address || '전북특별자치도 부안군 부안읍 용계길 13').replace(/13번지/g, '13');
-                    changed = true;
-                }
-                
-                if (!settings.mapAddress || settings.mapAddress.includes('13번지') || settings.mapAddress.includes('2호')) {
-                    settings.mapAddress = (settings.mapAddress || '전북특별자치도 부안군 부안읍 용계길 13').replace(/13번지/g, '13');
-                    changed = true;
-                }
-                
-                if (!settings.phone || settings.phone === '02-1234-5678') {
-                    settings.phone = '063-584-7072';
-                    changed = true;
-                }
-                
-                if (!settings.fax || settings.fax === '02-1234-5679') {
-                    settings.fax = '063-584-7073';
-                    changed = true;
-                }
-                
-                if (!settings.email || settings.email === 'gaoncare@email.com') {
-                    settings.email = 'gaon7072@naver.com';
-                    changed = true;
-                }
-                
-                const targetAreas = '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
-                if (settings.serviceAreas !== targetAreas) {
-                    settings.serviceAreas = targetAreas;
-                    changed = true;
-                }
-                
-                if (!settings.hasClearedExamples) {
-                    settings.reviews = "[]";
-                    settings.gallery = "[]";
-                    settings.hasClearedExamples = true;
-                    changed = true;
-                }
-                
-                if (settings.hoursWeekday === '09:00 ~ 18:00 (이후 당직 연결)' || settings.hoursWeekday === '09:00 ~ 17:00 (이후 기관장 번호로 연결)' || settings.hoursWeekday === '09:00 ~ 18:00 (이후 센터장에게 전화 연결됨)' || settings.hoursWeekday === '09:00 ~ 18:00 (18:00 이후 센터장 연결)' || !settings.hoursWeekday) {
-                    settings.hoursWeekday = '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
-                    changed = true;
-                }
-                
-                if (!settings.slogan || settings.slogan.includes('내 부모님처럼,')) {
-                    settings.slogan = settings.slogan ? settings.slogan.replace(/내 부모님처럼,/g, '내 부모님처럼') : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
-                    changed = true;
-                }
-                
-                for (let key in settings) {
-                    if (typeof settings[key] === 'string') {
-                        const original = settings[key];
-                        let replaced = original
-                            .replace(/가온방문요양\/방문목욕/g, '가온복지센터')
-                            .replace(/가온이/g, '가온복지센터가')
-                            .replace(/가온은/g, '가온복지센터는')
-                            .replace(/가온의/g, '가온복지센터의')
-                            .replace(/가온에는/g, '가온복지센터에는')
-                            .replace(/13번지/g, '13');
-                        
-                        if (replaced !== original) {
-                            settings[key] = replaced;
-                            changed = true;
-                        }
-                    }
-                }
-                if (changed || !rawSettings) {
-                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
-                }
-            } catch (e) {
-                console.error('Migration failed:', e);
-            }
-            // Update time
-            const timeSpan = document.getElementById('currentTime');
-            if (timeSpan) {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const date = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                timeSpan.textContent = `${year}-${month}-${date} ${hours}:${minutes}`;
-            }
+        <!-- Tab 2: Calculator Unit Costs & Rates Settings -->
+        <div id="tabCalculator" class="admin-tab-content">
+            <div class="admin-card">
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-calculator"></i> 이용료 계산기 서비스 단가 및 등급별 한도액 설정
+                </div>
 
-            /* ==========================================================================
-               1. Tab Panel Switcher
-               ========================================================================== */
-            const leadsTabBtn = document.getElementById('leadsTabBtn');
-            const settingsTabBtn = document.getElementById('settingsTabBtn');
-            const contentTabBtn = document.getElementById('contentTabBtn');
-            const leadsTabContent = document.getElementById('leadsTabContent');
-            const settingsTabContent = document.getElementById('settingsTabContent');
-            const contentTabContent = document.getElementById('contentTabContent');
-
-            function switchTab(activeBtn, activeContent) {
-                [leadsTabBtn, settingsTabBtn, contentTabBtn].forEach(b => b && b.classList.remove('active'));
-                [leadsTabContent, settingsTabContent, contentTabContent].forEach(c => c && c.classList.remove('active'));
-                activeBtn.classList.add('active');
-                activeContent.classList.add('active');
-            }
-
-            if (leadsTabBtn) leadsTabBtn.addEventListener('click', () => { switchTab(leadsTabBtn, leadsTabContent); renderLeadsTable(); });
-            if (settingsTabBtn) settingsTabBtn.addEventListener('click', () => switchTab(settingsTabBtn, settingsTabContent));
-            if (contentTabBtn) contentTabBtn.addEventListener('click', () => { switchTab(contentTabBtn, contentTabContent); initContentForms(); });
-
-            /* ==========================================================================
-               Content Management: Helper
-               ========================================================================== */
-            const defaultReviewsData = [];
-            const defaultGalleryData = [];
-            const defaultFaqData = [
-                { 
-                    q: '요양보호사 선생님이 어르신과 맞지 않으면 변경이 가능한가요?', 
-                    a: '네, 물론입니다. 가온복지센터는 어르신과 요양보호사 간의 정서적 유대감과 매칭 상태를 가장 중요하게 생각합니다. 서비스를 이용하시다가 불편하시거나 성향이 맞지 않는다고 판단되시면, 언제든 센터의 담당 사회복지사에게 말씀해 주세요. 추가 비용 없이 신속하고 원만하게 다른 요양보호사 선생님으로 재매칭해 드립니다.' 
-                },
-                { 
-                    q: '요양 서비스 도중 사고나 부상이 발생하면 어떻게 처리되나요?', 
-                    a: '가온복지센터의 모든 요양보호사 선생님들은 100% 전문인 배상책임보험에 가입되어 있습니다. 혹시라도 돌봄 서비스 진행 중 어르신께 안전사고나 재산상 손해가 발생할 경우, 책임지고 가입된 보험을 통해 전액 신속히 보상 및 처리해 드립니다. 안심하고 신뢰하며 서비스를 맡기셔도 좋습니다.' 
-                },
-                { 
-                    q: '남성 어르신인데 남성 요양보호사 선생님께 서비스를 받을 수 있나요?', 
-                    a: '현재 전국의 요양보호사 인력 중 남성 요양보호사의 비율이 매우 낮아, 남성 요양보호사 매칭은 현실적으로 쉽지 않으며 대기 시간이 오래 걸리거나 즉각적인 매칭이 어려울 수 있습니다. 사전에 센터로 문의해 주시면 당시 인력 현황을 확인하여 최대한 안내와 조정을 도와드리겠습니다.' 
-                },
-                { 
-                    q: '요양등급이 아직 없는데 가온복지센터 서비스를 즉시 이용할 수 있나요?', 
-                    a: '국가지원(노인장기요양보험)을 통한 방문요양 및 방문목욕 서비스는 장기요양등급을 판정받으신 어르신만 이용이 가능하므로, 등급 없이는 즉각적인 국가지원 서비스 이용이 불가능합니다. 다만, 가온복지센터에서 등급 신청 서류 준비 및 신청 상담 등을 상세히 지원해 드리고 있으니, 등급이 없으시더라도 먼저 센터로 연락 주시면 등급 신청 절차를 친절히 안내해 드리겠습니다.' 
-                },
-                { 
-                    q: '방문요양 한 달 예상 서비스 비용은 대략 어떻게 되나요?', 
-                    a: '국민건강보험공단 지원을 통해 본인부담금을 크게 줄일 수 있으며, 어르신의 장기요양 등급과 소득 수준(감경 여부)에 따라 본인이 실제 부담하시는 금액이 달라집니다. 홈페이지 하단의 지원금 계산기를 통해 모의 조회를 해보시거나, 정확한 비용은 센터로 전화 문의 주시면 맞춤 안내해 드리겠습니다.' 
-                }
-            ];
-
-            function createReviewRow(data = {}) {
-                const row = document.createElement('div');
-                row.className = 'content-row content-row-reviews';
-                row.innerHTML = `
-                    <input type="text" placeholder="보호자 이름 (예: 김○○)" value="${(data.name||'').replace(/"/g,'&quot;')}">
-                    <select>
-                        <option value="5" ${(data.stars||'5')==='5'?'selected':''}>★★★★★ 5점</option>
-                        <option value="4" ${data.stars==='4'?'selected':''}>★★★★ 4점</option>
-                        <option value="3" ${data.stars==='3'?'selected':''}>★★★ 3점</option>
-                        <option value="2" ${data.stars==='2'?'selected':''}>★★ 2점</option>
-                        <option value="1" ${data.stars==='1'?'selected':''}>★ 1점</option>
-                    </select>
-                    <input type="text" placeholder="관계/상황 (예: 어머니 85세, 방문요양)" value="${(data.relation||'').replace(/"/g,'&quot;')}">
-                    <button class="btn-remove-row" type="button" title="삭제"><i class="fa-solid fa-trash"></i></button>
-                    <textarea placeholder="후기 내용을 입력하세요." style="grid-column:1/4;">${data.text||''}</textarea>`;
-                row.style.gridTemplateColumns = '1fr 130px 1fr 40px';
-                row.style.gridTemplateRows = 'auto auto';
-                row.querySelector('.btn-remove-row').addEventListener('click', () => row.remove());
-                return row;
-            }
-
-            function createGalleryRow(data = {}) {
-                const row = document.createElement('div');
-                row.className = 'content-row content-row-gallery';
-                row.innerHTML = `
-                    <input type="url" placeholder="이미지 URL (https://...)" value="${(data.url||'').replace(/"/g,'&quot;')}">
-                    <input type="text" placeholder="캡션 (예: 장기요양기관 지정 인증서)" value="${(data.caption||'').replace(/"/g,'&quot;')}">
-                    <button class="btn-remove-row" type="button" title="삭제"><i class="fa-solid fa-trash"></i></button>`;
-                row.querySelector('.btn-remove-row').addEventListener('click', () => row.remove());
-                return row;
-            }
-
-            function createFaqRow(data = {}) {
-                const row = document.createElement('div');
-                row.className = 'content-row content-row-faq';
-                
-                if (data.isUserCreated) {
-                    row.dataset.isUserCreated = 'true';
-                    row.dataset.writer = data.writer || '';
-                    row.dataset.password = data.password || '';
-                    row.dataset.createdAt = data.createdAt || '';
-                }
-                
-                const userBadge = data.isUserCreated 
-                    ? `<span class="qna-user-badge waiting" style="background:#fee2e2;color:#dc2626;padding:2px 6px;border-radius:4px;font-size:0.75rem;margin-left:8px;">이용자 작성 (보호자: ${data.writer || '익명'})</span>` 
-                    : '';
-
-                row.innerHTML = `
-                    <div class="content-row-faq-inner" style="grid-template-columns: 1fr 1fr 40px; align-items: start; display: grid; gap: 8px;">
-                        <div style="display:flex; flex-direction:column; gap:4px;">
-                            <div style="display:flex; align-items:center;">
-                                <strong style="font-size:0.85rem;color:var(--color-primary-dark)">질문 (Q)</strong>
-                                ${userBadge}
-                            </div>
-                            <input type="text" placeholder="질문 (Q)" value="${(data.q||'').replace(/"/g,'&quot;')}">
+                <form id="calcSettingsForm">
+                    <!-- ① 방문요양 서비스 단가 (150분 이상 / 210분 포함) -->
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: #1e5a48; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                        <i class="fa-solid fa-hands-helping"></i> 방문요양 회당 서비스 단가 (원)
+                    </h3>
+                    <div class="admin-form-subgrid" style="margin-bottom: 30px;">
+                        <div class="form-group">
+                            <label class="form-label" for="costVisit30">30분 이상 단가</label>
+                            <input type="number" id="costVisit30" class="form-input" placeholder="17,450">
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:4px;">
-                            <strong style="font-size:0.85rem;color:var(--color-secondary-dark)">답변 (A)</strong>
-                            <textarea placeholder="답변 (A)" style="min-height: 40px; height: 40px;">${data.a||''}</textarea>
+                        <div class="form-group">
+                            <label class="form-label" for="costVisit60">60분 이상 단가</label>
+                            <input type="number" id="costVisit60" class="form-input" placeholder="25,320">
                         </div>
-                        <button class="btn-remove-row" type="button" title="삭제" style="margin-top:22px;"><i class="fa-solid fa-trash"></i></button>
-                    </div>`;
-                row.querySelector('.btn-remove-row').addEventListener('click', () => row.remove());
-                return row;
-            }
+                        <div class="form-group">
+                            <label class="form-label" for="costVisit90">90분 이상 단가</label>
+                            <input type="number" id="costVisit90" class="form-input" placeholder="34,120">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="costVisit120">120분 이상 단가</label>
+                            <input type="number" id="costVisit120" class="form-input" placeholder="43,430">
+                        </div>
+                        <div class="form-group" style="background: #f0fdf9; padding: 10px; border-radius: 8px; border: 1.5px solid #10b981;">
+                            <label class="form-label" for="costVisit150" style="color: #065f46; font-weight: 700;">
+                                <i class="fa-solid fa-check-circle" style="color: #10b981;"></i> 150분 이상 단가
+                            </label>
+                            <input type="number" id="costVisit150" class="form-input" placeholder="50,640" style="font-weight: 700; color: #065f46;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="costVisit180">180분 이상 단가</label>
+                            <input type="number" id="costVisit180" class="form-input" placeholder="57,020">
+                        </div>
+                        <div class="form-group" style="background: #f0fdf9; padding: 10px; border-radius: 8px; border: 1.5px solid #10b981;">
+                            <label class="form-label" for="costVisit210" style="color: #065f46; font-weight: 700;">
+                                <i class="fa-solid fa-star" style="color: #10b981;"></i> 210분 이상 단가
+                            </label>
+                            <input type="number" id="costVisit210" class="form-input" placeholder="63,530" style="font-weight: 700; color: #065f46;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="costVisit240">240분 이상 단가</label>
+                            <input type="number" id="costVisit240" class="form-input" placeholder="70,080">
+                        </div>
+                    </div>
 
-            function initContentForms() {
-                const s = JSON.parse(localStorage.getItem('gaon_settings')) || {};
+                    <!-- ② 방문목욕 서비스 단가 -->
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: #1e5a48; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                        <i class="fa-solid fa-bath"></i> 방문목욕 회당 서비스 단가 (원)
+                    </h3>
+                    <div class="admin-form-subgrid" style="margin-bottom: 30px;">
+                        <div class="form-group grid-span-2">
+                            <label class="form-label" for="costBath">차량 내 목욕 (60분 이상)</label>
+                            <input type="number" id="costBath" class="form-input" placeholder="88,990">
+                            <small style="color: #64748b; font-size: 0.8rem; margin-top: 4px; display: block;">
+                                ※ 40분~60분 미만 단가는 60분 이상 단가의 80%가 자동 산정됩니다.
+                            </small>
+                        </div>
+                    </div>
 
-                // Reviews
-                const reviewsRows = document.getElementById('reviewsRows');
-                if (reviewsRows) {
-                    reviewsRows.innerHTML = '';
-                    let reviews; try { reviews = s.reviews ? JSON.parse(s.reviews) : defaultReviewsData; } catch(e) { reviews = defaultReviewsData; }
-                    reviews.forEach(r => reviewsRows.appendChild(createReviewRow(r)));
-                }
+                    <!-- ③ 재가급여 월 한도액 (1~5등급) -->
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: #1e5a48; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                        <i class="fa-solid fa-sack-dollar"></i> 재가급여 등급별 월 한도액 (원)
+                    </h3>
+                    <div class="admin-form-subgrid" style="margin-bottom: 30px;">
+                        <div class="form-group">
+                            <label class="form-label" for="rateGrade1">1등급 월 한도액</label>
+                            <input type="number" id="rateGrade1" class="form-input" placeholder="2,512,900">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rateGrade2">2등급 월 한도액</label>
+                            <input type="number" id="rateGrade2" class="form-input" placeholder="2,331,200">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rateGrade3">3등급 월 한도액</label>
+                            <input type="number" id="rateGrade3" class="form-input" placeholder="1,528,200">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rateGrade4">4등급 월 한도액</label>
+                            <input type="number" id="rateGrade4" class="form-input" placeholder="1,409,700">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rateGrade5">5등급 월 한도액</label>
+                            <input type="number" id="rateGrade5" class="form-input" placeholder="1,208,900">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rateGradeCognitive">인지지원등급 월 한도액</label>
+                            <input type="number" id="rateGradeCognitive" class="form-input" placeholder="658,900">
+                        </div>
+                    </div>
 
-                // Gallery
-                const galleryRows = document.getElementById('galleryRows');
-                if (galleryRows) {
-                    galleryRows.innerHTML = '';
-                    let gallery; try { gallery = s.gallery ? JSON.parse(s.gallery) : defaultGalleryData; } catch(e) { gallery = defaultGalleryData; }
-                    gallery.forEach(g => galleryRows.appendChild(createGalleryRow(g)));
-                }
+                    <div class="admin-form-actions">
+                        <button type="button" id="resetCalcBtn" class="btn-admin-action btn-admin-danger" style="padding: 12px 20px;">
+                            <i class="fa-solid fa-rotate-left"></i> 기본 고시 단가로 초기화
+                        </button>
+                        <button type="submit" class="btn-primary" style="padding: 12px 28px; border-radius: 8px; font-weight: 700;">
+                            <i class="fa-solid fa-floppy-disk"></i> 계산기 설정 저장하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-                // Map
-                const mapAddrInput = document.getElementById('setMapAddress');
-                const serviceAreasInput = document.getElementById('setServiceAreas');
-                if (mapAddrInput) mapAddrInput.value = s.mapAddress || '전북특별자치도 부안군 부안읍 용계길 13';
-                if (serviceAreasInput) serviceAreasInput.value = s.serviceAreas || '부안읍\n주산면\n동진면\n행안면\n계화면\n보안면\n변산면\n진서면\n백산면\n상서면\n하서면\n줄포면';
+        <!-- Tab 3: Site Settings -->
+        <div id="tabSiteSettings" class="admin-tab-content">
+            <div class="admin-card">
+                <div class="admin-card-title">
+                    <i class="fa-solid fa-building"></i> 기관 정보 설정
+                </div>
 
-                // FAQ
-                const faqRows = document.getElementById('faqRows');
-                if (faqRows) {
-                    faqRows.innerHTML = '';
-                    let faq; try { faq = s.faq ? JSON.parse(s.faq) : defaultFaqData; } catch(e) { faq = defaultFaqData; }
-                    faq = faq
-                        .filter(item => item.q !== '주말이나 야간, 공휴일에도 서비스를 제공하나요?')
-                        .map(item => {
-                            if (item.q.includes('남성 요양보호사')) {
-                                item.a = '현재 전국의 요양보호사 인력 중 남성 요양보호사의 비율이 매우 낮아, 남성 요양보호사 매칭은 현실적으로 쉽지 않으며 대기 시간이 오래 걸리거나 즉각적인 매칭이 어려울 수 있습니다. 사전에 센터로 문의해 주시면 당시 인력 현황을 확인하여 최대한 안내와 조정을 도와드리겠습니다.';
-                            }
-                            if (item.q.includes('요양등급이 아직 없는데')) {
-                                item.a = '국가지원(노인장기요양보험)을 통한 방문요양 및 방문목욕 서비스는 장기요양등급을 판정받으신 어르신만 이용이 가능하므로, 등급 없이는 즉각적인 국가지원 서비스 이용이 불가능합니다. 다만, 가온복지센터에서 등급 신청 서류 준비 및 신청 상담 등을 상세히 지원해 드리고 있으니, 등급이 없으시더라도 먼저 센터로 연락 주시면 등급 신청 절차를 친절히 안내해 드리겠습니다.';
-                            }
-                            return item;
-                        });
-                    faq.forEach(f => faqRows.appendChild(createFaqRow(f)));
-                }
-            }
+                <form id="siteSettingsForm">
+                    <div class="admin-form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="agencyName">기관명</label>
+                            <input type="text" id="agencyName" class="form-input" value="가온복지센터">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="ownerName">대표자명 / 센터장</label>
+                            <input type="text" id="ownerName" class="form-input" value="최대웅">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phoneNum">전화번호</label>
+                            <input type="text" id="phoneNum" class="form-input" value="063-584-7072">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="faxNum">팩스번호</label>
+                            <input type="text" id="faxNum" class="form-input" value="063-584-7073">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="emailAddr">이메일 주소</label>
+                            <input type="email" id="emailAddr" class="form-input" value="gaon7072@naver.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="agencyAddress">기관 주소</label>
+                            <input type="text" id="agencyAddress" class="form-input" value="전북특별자치도 부안군 부안읍 용계길 13">
+                        </div>
+                        <div class="form-group grid-span-2">
+                            <label class="form-label" for="hoursWeekday">평일 운영시간 안내</label>
+                            <input type="text" id="hoursWeekday" class="form-input" value="08:00 ~ 17:00 (17:00 이후 센터장 연결)">
+                        </div>
+                    </div>
 
-            // Add row buttons
-            document.getElementById('addReviewBtn')?.addEventListener('click', () => {
-                document.getElementById('reviewsRows').appendChild(createReviewRow());
-            });
-            document.getElementById('addGalleryBtn')?.addEventListener('click', () => {
-                document.getElementById('galleryRows').appendChild(createGalleryRow());
-            });
-            document.getElementById('addFaqBtn')?.addEventListener('click', () => {
-                document.getElementById('faqRows').appendChild(createFaqRow());
-            });
+                    <div class="admin-form-actions">
+                        <button type="submit" class="btn-primary" style="padding: 12px 28px; border-radius: 8px; font-weight: 700;">
+                            <i class="fa-solid fa-floppy-disk"></i> 기관 설정 저장하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-            // Save reviews
-            document.getElementById('saveReviewsBtn')?.addEventListener('click', () => {
-                const rows = document.querySelectorAll('#reviewsRows .content-row');
-                const data = Array.from(rows).map(row => {
-                    const inputs = row.querySelectorAll('input, select, textarea');
-                    return { name: inputs[0].value.trim(), stars: inputs[1].value, relation: inputs[2].value.trim(), text: inputs[3].value.trim() };
-                }).filter(r => r.name || r.text);
-                const s = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                s.reviews = JSON.stringify(data);
-                localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('이용자 후기가 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
-            });
+    </div>
 
-            // Save gallery
-            document.getElementById('saveGalleryBtn')?.addEventListener('click', () => {
-                const rows = document.querySelectorAll('#galleryRows .content-row');
-                const data = Array.from(rows).map(row => {
-                    const inputs = row.querySelectorAll('input');
-                    return { url: inputs[0].value.trim(), caption: inputs[1].value.trim() };
-                }).filter(g => g.url || g.caption);
-                const s = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                s.gallery = JSON.stringify(data);
-                localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('갤러리 사진 목록이 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
-            });
-
-            // Save map
-            document.getElementById('mapSettingsForm')?.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const s = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                s.mapAddress = document.getElementById('setMapAddress').value.trim();
-                s.serviceAreas = document.getElementById('setServiceAreas').value.trim();
-                localStorage.setItem('gaon_settings', JSON.stringify(s));
-                alert('지도 및 서비스 지역 설정이 저장되었습니다.\n홈페이지에 실시간 반영됩니다.');
-            });
-
-            // Expose actions globally for inline html events
-            window.changeLeadStatus = function(id, status) {
-                const leads = JSON.parse(localStorage.getItem('gaon_consultations')) || [];
-                const targetIdx = leads.findIndex(l => l.id === id);
-                if (targetIdx !== -1) {
-                    leads[targetIdx].status = status;
-                    localStorage.setItem('gaon_consultations', JSON.stringify(leads));
-                    renderLeadsTable();
-                }
-            };
-
-            window.deleteLead = function(id) {
-                if (confirm('해당 상담 신청 내역을 정말 삭제하시겠습니까? 데이터는 복구할 수 없습니다.')) {
-                    const leads = JSON.parse(localStorage.getItem('gaon_consultations')) || [];
-                    const filteredLeads = leads.filter(l => l.id !== id);
-                    localStorage.setItem('gaon_consultations', JSON.stringify(filteredLeads));
-                    renderLeadsTable();
-                }
-            };
-
-            function escapeHtml(text) {
-                if (typeof text !== 'string') return text;
-                return text
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
-            }
-
-            /* ==========================================================================
-               3. Site Setting Config Form Submit & Initialize
-               ========================================================================== */
-            const agencyForm = document.getElementById('agencySettingsForm');
-            const agencyNameInput = document.getElementById('setAgencyName');
-            const ownerInput = document.getElementById('setOwner');
-            const phoneInput = document.getElementById('setPhone');
-            const designationInput = document.getElementById('setDesignation');
-            const bizNumberInput = document.getElementById('setBizNumber');
-            const addressInput = document.getElementById('setAddress');
-            const sloganInput = document.getElementById('setSlogan');
-            const hoursWeekdayInput = document.getElementById('setHoursWeekday');
-            const hoursWeekendInput = document.getElementById('setHoursWeekend');
-            const faxInput = document.getElementById('setFax');
-            const emailInput = document.getElementById('setEmail');
-            const snsBlogInput = document.getElementById('setSnsBlog');
-            const snsKakaoInput = document.getElementById('setSnsKakao');
-            const snsYoutubeInput = document.getElementById('setSnsYoutube');
-            const calculatorForm = document.getElementById('calculatorSettingsForm');
-            const greetingForm = document.getElementById('greetingSettingsForm');
-            const greetingTitleInput = document.getElementById('setGreetingTitle');
-            const greetingContentInput = document.getElementById('setGreetingContent');
-            const greetingPositionInput = document.getElementById('setGreetingPosition');
-            const greetingDirectorNameInput = document.getElementById('setGreetingDirectorName');
-            const historyForm = document.getElementById('historySettingsForm');
-            const historyTextInput = document.getElementById('setHistoryText');
-
-            // Save basic site details
-            if (agencyForm) {
-                agencyForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                    if (agencyNameInput) settings.agencyName = agencyNameInput.value.trim();
-                    if (ownerInput) settings.owner = ownerInput.value.trim();
-                    if (phoneInput) settings.phone = phoneInput.value.trim();
-                    if (designationInput) settings.designation = designationInput.value.trim();
-                    if (bizNumberInput) settings.bizNumber = bizNumberInput.value.trim();
-                    if (addressInput) settings.address = addressInput.value.trim();
-                    if (sloganInput) settings.slogan = sloganInput.value.trim();
-                    if (hoursWeekdayInput) settings.hoursWeekday = hoursWeekdayInput.value.trim();
-                    if (hoursWeekendInput) settings.hoursWeekend = hoursWeekendInput.value.trim();
-                    if (faxInput) settings.fax = faxInput.value.trim();
-                    if (emailInput) settings.email = emailInput.value.trim();
-                    if (snsBlogInput) settings.snsBlog = snsBlogInput.value.trim();
-                    if (snsKakaoInput) settings.snsKakao = snsKakaoInput.value.trim();
-                    if (snsYoutubeInput) settings.snsYoutube = snsYoutubeInput.value.trim();
-                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
-                    alert('기관 및 푸터 설정 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 및 푸터에 실시간 연동됩니다.');
-                });
-            }
-
-            // Save Calculator parameters
-            if (calculatorForm) {
-                calculatorForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const newCalcSettings = {
-                        rates: {
-                            '1': parseInt(document.getElementById('rate1').value) || 2069900,
-                            '2': parseInt(document.getElementById('rate2').value) || 1869600,
-                            '3': parseInt(document.getElementById('rate3').value) || 1450000,
-                            '4': parseInt(document.getElementById('rate4').value) || 1409700,
-                            '5': parseInt(document.getElementById('rate5').value) || 1150000,
-                            '6': parseInt(document.getElementById('rate6').value) || 640000,
-                            '0': 0
-                        },
-                        unitCosts: {
-                            visit60: parseInt(document.getElementById('visitCost60').value) || 25320,
-                            visit90: parseInt(document.getElementById('visitCost90').value) || 34220,
-                            visit120: parseInt(document.getElementById('visitCost120').value) || 43150,
-                            visit180: parseInt(document.getElementById('visitCost180').value) || 56120,
-                            bath: parseInt(document.getElementById('bathCost').value) || 85400
-                        }
-                    };
-                    localStorage.setItem('gaon_calculator_settings', JSON.stringify(newCalcSettings));
-                    alert('장기요양 본인부담금 및 급여 한도/단가 설정이 성공적으로 저장되었습니다.\n홈페이지 계산기 로직 및 요율에 즉시 반영됩니다.');
-                });
-            }
-
-            // Save Greetings details
-            if (greetingForm) {
-                greetingForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                    settings.greetingTitle = greetingTitleInput.value.trim().replace(/\n/g, '<br>');
-                    settings.greetingContent = greetingContentInput.value.trim();
-                    settings.greetingPosition = greetingPositionInput.value.trim();
-                    settings.greetingDirectorName = greetingDirectorNameInput.value.trim();
-                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
-                    alert('기관장 인사말 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 인사말에 실시간 연동됩니다.');
-                });
-            }
-
-            // Save Center History details
-            if (historyForm) {
-                historyForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                    settings.historyText = historyTextInput.value.trim();
-                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
-                    alert('기관 연혁 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 연혁 영역에 실시간 연동됩니다.');
-                });
-            }
-
-            // Set initial site configs
-            function initSettingsForms() {
-                // Settings Form
-                const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                if (agencyNameInput) agencyNameInput.value = settings.agencyName || '가온복지센터';
-                if (ownerInput) ownerInput.value = settings.owner || '최대웅';
-                if (phoneInput) phoneInput.value = settings.phone || '063-584-7072';
-                if (addressInput) addressInput.value = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
-                if (sloganInput) sloganInput.value = settings.slogan !== undefined ? settings.slogan : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
-                if (hoursWeekdayInput) hoursWeekdayInput.value = settings.hoursWeekday !== undefined ? settings.hoursWeekday : '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
-                if (hoursWeekendInput) hoursWeekendInput.value = settings.hoursWeekend !== undefined ? settings.hoursWeekend : '24시간 전화 상담 대기';
-                if (faxInput) faxInput.value = settings.fax !== undefined ? settings.fax : '063-584-7073';
-                if (emailInput) emailInput.value = settings.email !== undefined ? settings.email : 'gaon7072@naver.com';
-                if (snsBlogInput) snsBlogInput.value = settings.snsBlog || '';
-                if (snsKakaoInput) snsKakaoInput.value = settings.snsKakao || 'http://pf.kakao.com/_xfxmvXn';
-                if (snsYoutubeInput) snsYoutubeInput.value = settings.snsYoutube || '';
-
-                // Greetings Form Init
-                greetingTitleInput.value = (settings.greetingTitle !== undefined ? settings.greetingTitle : '어르신의 행복한 노후<br>가온복지센터가 든든한 동반자가 되겠습니다.').replace(/<br\s*\/?>/gi, '\n');
-                
-                const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
-                greetingContentInput.value = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
-                
-                greetingPositionInput.value = settings.greetingPosition !== undefined ? settings.greetingPosition : '센터장';
-                greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '최대웅');
-
-                // History Form Init
-                const defaultHistory = `2018.08 - 국민건강보험공단 노인장기요양 기관 지정\n2018.08 - 가온복지센터 방문요양 시작\n2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정\n2021.08 - 가온복지센터 방문목욕 시작`;
-                historyTextInput.value = settings.historyText !== undefined ? settings.historyText : defaultHistory;
-
-                // Calculator Form Init
-                const defaultRates = { '1': 2069900, '2': 1869600, '3': 1450000, '4': 1409700, '5': 1150000, '6': 640000, '0': 0 };
-                const defaultUnitCosts = {
-                    visit60: 25320,
-                    visit90: 34220,
-                    visit120: 43150,
-                    visit180: 56120,
-                    bath: 85400
-                };
-
-                const calcSettings = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {
-                    rates: defaultRates,
-                    unitCosts: defaultUnitCosts
-                };
-
-                const rates = calcSettings.rates || defaultRates;
-                const unitCosts = calcSettings.unitCosts || defaultUnitCosts;
-
-                if (document.getElementById('rate1')) document.getElementById('rate1').value = rates['1'] || defaultRates['1'];
-                if (document.getElementById('rate2')) document.getElementById('rate2').value = rates['2'] || defaultRates['2'];
-                if (document.getElementById('rate3')) document.getElementById('rate3').value = rates['3'] || defaultRates['3'];
-                if (document.getElementById('rate4')) document.getElementById('rate4').value = rates['4'] || defaultRates['4'];
-                if (document.getElementById('rate5')) document.getElementById('rate5').value = rates['5'] || defaultRates['5'];
-                if (document.getElementById('rate6')) document.getElementById('rate6').value = rates['6'] || defaultRates['6'];
-
-                if (document.getElementById('visitCost60')) document.getElementById('visitCost60').value = unitCosts.visit60 || defaultUnitCosts.visit60;
-                if (document.getElementById('visitCost90')) document.getElementById('visitCost90').value = unitCosts.visit90 || defaultUnitCosts.visit90;
-                if (document.getElementById('visitCost120')) document.getElementById('visitCost120').value = unitCosts.visit120 || defaultUnitCosts.visit120;
-                if (document.getElementById('visitCost180')) document.getElementById('visitCost180').value = unitCosts.visit180 || defaultUnitCosts.visit180;
-                if (document.getElementById('bathCost')) document.getElementById('bathCost').value = unitCosts.bath || defaultUnitCosts.bath;
-            }
-
-            // Save Calculator settings
-            const calculatorSettingsForm = document.getElementById('calculatorSettingsForm');
-            if (calculatorSettingsForm) {
-                calculatorSettingsForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const newCalcSettings = {
-                        rates: {
-                            '1': parseInt(document.getElementById('rate1')?.value || 0),
-                            '2': parseInt(document.getElementById('rate2')?.value || 0),
-                            '3': parseInt(document.getElementById('rate3')?.value || 0),
-                            '4': parseInt(document.getElementById('rate4')?.value || 0),
-                            '5': parseInt(document.getElementById('rate5')?.value || 0),
-                            '6': parseInt(document.getElementById('rate6')?.value || 0),
-                        },
-                        unitCosts: {
-                            visit60: parseInt(document.getElementById('visitCost60')?.value || 0),
-                            visit90: parseInt(document.getElementById('visitCost90')?.value || 0),
-                            visit120: parseInt(document.getElementById('visitCost120')?.value || 0),
-                            visit180: parseInt(document.getElementById('visitCost180')?.value || 0),
-                            bath: parseInt(document.getElementById('bathCost')?.value || 0)
-                        }
-                    };
-                    localStorage.setItem('gaon_calculator_settings', JSON.stringify(newCalcSettings));
-                    alert('모의 계산기 세팅이 저장되었습니다.\n홈페이지 계산기 로직 및 요율에 즉시 반영됩니다.');
-                });
-            }
-
-            // Save Greetings details
-            if (greetingForm) {
-                greetingForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                    settings.greetingTitle = greetingTitleInput.value.trim().replace(/\n/g, '<br>');
-                    settings.greetingContent = greetingContentInput.value.trim();
-                    settings.greetingPosition = greetingPositionInput.value.trim();
-                    settings.greetingDirectorName = greetingDirectorNameInput.value.trim();
-                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
-                    alert('기관장 인사말 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 인사말에 실시간 연동됩니다.');
-                });
-            }
-
-            // Save Center History details
-            if (historyForm) {
-                historyForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                    settings.historyText = historyTextInput.value.trim();
-                    localStorage.setItem('gaon_settings', JSON.stringify(settings));
-                    alert('기관 연혁 정보가 성공적으로 저장되었습니다.\n홈페이지 메인 연혁 영역에 실시간 연동됩니다.');
-                });
-            }
-
-            // Set initial site configs
-            function initSettingsForms() {
-                // Settings Form
-                const settings = JSON.parse(localStorage.getItem('gaon_settings')) || {};
-                if (agencyNameInput) agencyNameInput.value = settings.agencyName || '가온복지센터';
-                if (ownerInput) ownerInput.value = settings.owner || '최대웅';
-                if (phoneInput) phoneInput.value = settings.phone || '063-584-7072';
-                if (addressInput) addressInput.value = settings.address || '전북특별자치도 부안군 부안읍 용계길 13';
-                if (sloganInput) sloganInput.value = settings.slogan !== undefined ? settings.slogan : '내 부모님처럼 사랑과 정성을 더해 어르신의 따뜻한 내일에 동행합니다.';
-                if (hoursWeekdayInput) hoursWeekdayInput.value = settings.hoursWeekday !== undefined ? settings.hoursWeekday : '08:00 ~ 17:00 (17:00 이후 센터장 연결)';
-                if (hoursWeekendInput) hoursWeekendInput.value = settings.hoursWeekend !== undefined ? settings.hoursWeekend : '24시간 전화 상담 대기';
-                if (faxInput) faxInput.value = settings.fax !== undefined ? settings.fax : '063-584-7073';
-                if (emailInput) emailInput.value = settings.email !== undefined ? settings.email : 'gaon7072@naver.com';
-                if (snsBlogInput) snsBlogInput.value = settings.snsBlog || '';
-                if (snsKakaoInput) snsKakaoInput.value = settings.snsKakao || 'http://pf.kakao.com/_xfxmvXn';
-                if (snsYoutubeInput) snsYoutubeInput.value = settings.snsYoutube || '';
-
-                // Greetings Form Init
-                greetingTitleInput.value = (settings.greetingTitle !== undefined ? settings.greetingTitle : '어르신의 행복한 노후<br>가온복지센터가 든든한 동반자가 되겠습니다.').replace(/<br\s*\/?>/gi, '\n');
-                
-                const defaultGreeting = `안녕하십니까?\n가온복지센터 홈페이지를 찾아주신 어르신과 보호자 가족 여러분께 진심으로 감사드립니다.\n\n우리의 부모님들은 한평생 가족을 위해 헌신하며 땀 흘려 오셨습니다. 이제 그 따뜻한 헌신에 보답하고자, 가온복지센터는 내 부모님을 모시는 정성스러운 마음과 존경의 예를 더해 어르신들의 손을 잡고 동행하고자 합니다.\n\n단순한 신체활동과 가사 지원을 넘어, 어르신들이 살아가시는 삶의 터전에서 주체적이고 편안한 노후를 보내실 수 있도록 전문성과 정성을 담아 돌봄을 제공하겠습니다. 또한 돌봄의 무게로 지친 보호자님들의 마음에 깊은 위로가 되고 든든한 휴식처가 되어 드릴 것을 약속드립니다.\n\n어르신의 미소가 가온복지센터의 보람입니다. 늘 한결같은 정성과 신뢰로 곁에 머물겠습니다. 감사합니다.`;
-                greetingContentInput.value = settings.greetingContent !== undefined ? settings.greetingContent : defaultGreeting;
-                
-                greetingPositionInput.value = settings.greetingPosition !== undefined ? settings.greetingPosition : '센터장';
-                greetingDirectorNameInput.value = settings.greetingDirectorName !== undefined ? settings.greetingDirectorName : (settings.owner || '최대웅');
-
-                // History Form Init
-                const defaultHistory = `2018.08 - 국민건강보험공단 노인장기요양 기관 지정\n2018.08 - 가온복지센터 방문요양 시작\n2021.03 - 2020년 장기요양 정기평가 최우수 기관 선정\n2021.08 - 가온복지센터 방문목욕 시작`;
-                historyTextInput.value = settings.historyText !== undefined ? settings.historyText : defaultHistory;
-
-                // Calculator Form
-                const defaultRates = { '1': 1885000, '2': 1690000, '3': 1417200, '4': 1306200, '5': 1121400 };
-                const calcSettings = JSON.parse(localStorage.getItem('gaon_calculator_settings')) || {
-                    baseDailyCost: 55000,
-                    rates: defaultRates
-                };
-                costInput.value = calcSettings.baseDailyCost;
-                
-                for (let i = 1; i <= 5; i++) {
-                    rateInputs[i].value = calcSettings.rates[i] || defaultRates[i];
-                }
-            }
-
-            /* ==========================================================================
-               4. Leads CSV/Excel Export function
-               ========================================================================== */
-            const exportCsvBtn = document.getElementById('exportCsvBtn');
-            if (exportCsvBtn) {
-                exportCsvBtn.addEventListener('click', () => {
-                    const leads = JSON.parse(localStorage.getItem('gaon_consultations')) || [];
-                    if (leads.length === 0) {
-                        alert('내보낼 상담 접수 내역이 없습니다.');
-                        return;
-                    }
-
-                    let csvContent = "\uFEFF"; // Add UTF-8 BOM for Hangul compatibility in Excel
-                    csvContent += "번호,신청일시,보호자명,연락처,어르신 연령대,필요 서비스,상담 문의내용,진행상태\r\n";
-
-                    leads.forEach((lead, index) => {
-                        const servicesStr = Array.isArray(lead.services) ? lead.services.join(';') : (lead.services || '');
-                        const msgStr = lead.message ? lead.message.replace(/"/g, '""').replace(/\r?\n/g, ' ') : '';
-                        
-                        csvContent += `${leads.length - index},"${lead.date}","${lead.name}","${lead.phone}","${lead.age}세 대","${servicesStr}","${msgStr}","${lead.status}"\r\n`;
-                    });
-
-                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                    const link = document.createElement("a");
-                    const url = URL.createObjectURL(blob);
-                    
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", `gaon_consultations_${new Date().toISOString().slice(0, 10)}.csv`);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
-            }
-
-            // Start up
-            initSettingsForms();
-            renderLeadsTable();
-        });
-    </script>
+    <!-- JS -->
+    <script src="js/admin.js"></script>
 </body>
 </html>

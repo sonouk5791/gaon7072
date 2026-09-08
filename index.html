@@ -44,7 +44,7 @@
                     <li><a href="#reviews" class="nav-link">이용자 후기</a></li>
                     <li><a href="#gallery" class="nav-link">인증서/사진</a></li>
                     <li><a href="#map" class="nav-link">오시는 길</a></li>
-                    <li><a href="#calculator" class="nav-link">지원금 계산기</a></li>
+                    <li><a href="#calculator" class="nav-link">이용료 계산하기</a></li>
                     <li><a href="#faq" class="nav-link">Q&A</a></li>
                     <li><a href="#consultation" class="nav-link-btn mobile-only">상담 신청</a></li>
                 </ul>
@@ -471,7 +471,7 @@
                         </div>
                         <h3 class="target-title">장기요양등급 소지자</h3>
                         <p class="target-desc">
-                            국민건강보험공단으로부터 노인장기요양등급(1등급 ~ 5등급 및 인지지원등급)을 받으신 어르신
+                            국민건강보험공단으로부터 노인장기요양등급(1등급 ~ 5등급)을 받으신 어르신
                         </p>
                         <ul class="target-list">
                             <li><i class="fa-solid fa-check"></i> 정부 지원으로 본인부담금 최소화</li>
@@ -638,253 +638,264 @@
             </div>
         </section>
 
-        <!-- Subsidy Calculator + Form Section -->
-        <section id="calculator" class="calc-consultation-section">
+        <!-- 이용료 계산하기 Section -->
+        <section id="calculator" class="calculator-section" style="padding: 70px 0; background-color: #ffffff;">
             <div class="container">
-                <div class="calc-consult-grid">
-                    
-                    <!-- Left: Subsidy Calculator -->
-                    <div class="calculator-box">
-                        <div class="calc-header" style="text-align: center; margin-bottom: 28px;">
-                            <h3 class="calc-title" style="font-size: 1.5rem; justify-content: center; gap: 8px;">
-                                🧮 본인부담금 계산기
-                            </h3>
-                            <p class="calc-subtitle" style="font-size: 0.88rem; color: var(--color-text-muted); line-height: 1.5; margin-top: 6px;">
-                                국민건강보험공단 고시 기준 · 서비스 구분과 등급을 선택하면 자동으로 계산됩니다.
-                            </p>
+                <div class="calculator-box" style="max-width: 860px; margin: 0 auto; background: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; padding: 36px 32px; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);">
+                    <div class="calc-header" style="text-align: center; margin-bottom: 28px;">
+                        <h3 class="calc-title" style="font-size: 1.65rem; justify-content: center; gap: 8px;">
+                            🧮 이용료 계산하기
+                        </h3>
+                        <p class="calc-subtitle" style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.5; margin-top: 6px;">
+                            국민건강보험공단 고시 기준 · 서비스 구분과 등급을 선택하면 자동으로 계산됩니다.
+                        </p>
+                    </div>
+
+                    <div class="calc-form">
+
+                        <!-- ① 서비스 구분 -->
+                        <div class="calc-card-step">
+                            <div class="calc-step-title">
+                                <span class="step-num">1</span> 서비스 구분
+                            </div>
+                            <div class="calc-service-type-group" id="serviceTypeGroup">
+                                <label class="calc-radio-card active" for="typeYoyang">
+                                    <input type="radio" id="typeYoyang" name="serviceType" value="요양" checked>
+                                    <i class="fa-solid fa-hands-helping"></i>
+                                    <span>요양</span>
+                                </label>
+                                <label class="calc-radio-card" for="typeMogyok">
+                                    <input type="radio" id="typeMogyok" name="serviceType" value="목욕">
+                                    <i class="fa-solid fa-bath"></i>
+                                    <span>목욕</span>
+                                </label>
+                                <label class="calc-radio-card" for="typeBoth">
+                                    <input type="radio" id="typeBoth" name="serviceType" value="요양+목욕">
+                                    <i class="fa-solid fa-notes-medical"></i>
+                                    <span>요양+목욕</span>
+                                </label>
+                            </div>
                         </div>
 
-                        <div class="calc-form">
+                        <!-- ② 서비스 시간 -->
+                        <div class="calc-card-step">
+                            <div class="calc-step-title">
+                                <span class="step-num">2</span> 서비스 시간
+                            </div>
 
-                            <!-- ① 서비스 구분 -->
-                            <div class="calc-card-step">
-                                <div class="calc-step-title">
-                                    <span class="step-num">1</span> 서비스 구분
-                                </div>
-                                <div class="calc-service-type-group" id="serviceTypeGroup">
-                                    <label class="calc-radio-card active" for="typeYoyang">
-                                        <input type="radio" id="typeYoyang" name="serviceType" value="요양" checked>
-                                        <i class="fa-solid fa-hands-helping"></i>
-                                        <span>요양</span>
+                            <!-- 요양 시간 옵션 -->
+                            <div id="yoyangTimeOptions">
+                                <div class="calc-time-grid">
+                                    <label class="calc-time-card" for="time60">
+                                        <input type="radio" id="time60" name="serviceTime" value="60">
+                                        <span class="time-min">60분</span>
                                     </label>
-                                    <label class="calc-radio-card" for="typeMogyok">
-                                        <input type="radio" id="typeMogyok" name="serviceType" value="목욕">
-                                        <i class="fa-solid fa-bath"></i>
-                                        <span>목욕</span>
+                                    <label class="calc-time-card active" for="time90">
+                                        <input type="radio" id="time90" name="serviceTime" value="90" checked>
+                                        <span class="time-min">90분</span>
                                     </label>
-                                    <label class="calc-radio-card" for="typeBoth">
-                                        <input type="radio" id="typeBoth" name="serviceType" value="요양+목욕">
-                                        <i class="fa-solid fa-notes-medical"></i>
-                                        <span>요양+목욕</span>
+                                    <label class="calc-time-card" for="time120">
+                                        <input type="radio" id="time120" name="serviceTime" value="120">
+                                        <span class="time-min">120분</span>
+                                    </label>
+                                    <label class="calc-time-card" for="time150">
+                                        <input type="radio" id="time150" name="serviceTime" value="150">
+                                        <span class="time-min">150분</span>
+                                    </label>
+                                    <label class="calc-time-card" for="time180">
+                                        <input type="radio" id="time180" name="serviceTime" value="180">
+                                        <span class="time-min">180분</span>
+                                    </label>
+                                    <label class="calc-time-card" for="time210">
+                                        <input type="radio" id="time210" name="serviceTime" value="210">
+                                        <span class="time-min">210분</span>
                                     </label>
                                 </div>
+                                <p class="calc-note-sm" style="color: #e53e3e; font-weight: 600;">※ 요양: 월 20회 기준 예상 금액 자동계산</p>
                             </div>
 
-                            <!-- ② 서비스 시간 -->
-                            <div class="calc-card-step">
-                                <div class="calc-step-title">
-                                    <span class="step-num">2</span> 서비스 시간
+                            <!-- 목욕 시간 옵션 -->
+                            <div id="mogyokTimeOptions" style="display:none;">
+                                <div class="calc-time-grid calc-time-grid--bath">
+                                    <label class="calc-time-card calc-time-card--bath" for="bathShort">
+                                        <input type="radio" id="bathShort" name="serviceTime" value="bath_short">
+                                        <i class="fa-solid fa-car-side"></i>
+                                        <span class="time-label">차량 내 목욕</span>
+                                        <span class="time-sub">40분 이상 ~ 60분 미만</span>
+                                    </label>
+                                    <label class="calc-time-card calc-time-card--bath active" for="bathLong">
+                                        <input type="radio" id="bathLong" name="serviceTime" value="bath_long" checked>
+                                        <i class="fa-solid fa-car-side"></i>
+                                        <span class="time-label">차량 내 목욕</span>
+                                        <span class="time-sub">60분 이상</span>
+                                    </label>
                                 </div>
-
-                                <!-- 요양 시간 옵션 -->
-                                <div id="yoyangTimeOptions">
-                                    <div class="calc-time-grid">
-                                        <label class="calc-time-card" for="time60">
-                                            <input type="radio" id="time60" name="serviceTime" value="60" checked>
-                                            <span class="time-min">60분</span>
-                                        </label>
-                                        <label class="calc-time-card" for="time90">
-                                            <input type="radio" id="time90" name="serviceTime" value="90">
-                                            <span class="time-min">90분</span>
-                                        </label>
-                                        <label class="calc-time-card" for="time120">
-                                            <input type="radio" id="time120" name="serviceTime" value="120">
-                                            <span class="time-min">120분</span>
-                                        </label>
-                                        <label class="calc-time-card" for="time150">
-                                            <input type="radio" id="time150" name="serviceTime" value="150">
-                                            <span class="time-min">150분</span>
-                                        </label>
-                                        <label class="calc-time-card" for="time180">
-                                            <input type="radio" id="time180" name="serviceTime" value="180">
-                                            <span class="time-min">180분</span>
-                                        </label>
-                                    </div>
-                                    <p class="calc-note-sm">※ 요양: 최대 주 5회 이용 기본</p>
-                                </div>
-
-                                <!-- 목욕 시간 옵션 -->
-                                <div id="mogyokTimeOptions" style="display:none;">
-                                    <div class="calc-time-grid calc-time-grid--bath">
-                                        <label class="calc-time-card calc-time-card--bath" for="bathShort">
-                                            <input type="radio" id="bathShort" name="serviceTime" value="bath_short">
-                                            <i class="fa-solid fa-car-side"></i>
-                                            <span class="time-label">차량 내 목욕</span>
-                                            <span class="time-sub">40분 이상 ~ 60분 미만</span>
-                                        </label>
-                                        <label class="calc-time-card calc-time-card--bath active" for="bathLong">
-                                            <input type="radio" id="bathLong" name="serviceTime" value="bath_long" checked>
-                                            <i class="fa-solid fa-car-side"></i>
-                                            <span class="time-label">차량 내 목욕</span>
-                                            <span class="time-sub">60분 이상</span>
-                                        </label>
-                                    </div>
-                                    <p class="calc-note-sm">※ 목욕: 월 2회 이용 기본</p>
-                                </div>
+                                <p class="calc-note-sm" style="margin-top: 10px; color: #e53e3e; font-weight: 600;">※ 목욕: 월 2회 기준 예상 금액 자동계산</p>
                             </div>
-
-                            <!-- ③ 등급 -->
-                            <div class="calc-card-step">
-                                <div class="calc-step-title">
-                                    <span class="step-num">3</span> 등급
-                                </div>
-                                <div class="calc-grade-grid" id="gradeGroup">
-                                    <label class="calc-grade-card" for="grade1"><input type="radio" id="grade1" name="careGrade" value="1"><span>1등급</span></label>
-                                    <label class="calc-grade-card" for="grade2"><input type="radio" id="grade2" name="careGrade" value="2"><span>2등급</span></label>
-                                    <label class="calc-grade-card" for="grade3"><input type="radio" id="grade3" name="careGrade" value="3"><span>3등급</span></label>
-                                    <label class="calc-grade-card" for="grade4"><input type="radio" id="grade4" name="careGrade" value="4" checked><span>4등급</span></label>
-                                    <label class="calc-grade-card" for="grade5"><input type="radio" id="grade5" name="careGrade" value="5"><span>5등급</span></label>
-                                    <label class="calc-grade-card" for="grade6"><input type="radio" id="grade6" name="careGrade" value="6"><span>인지<br>지원</span></label>
-                                </div>
-                                <div class="calc-group" style="margin-top: 16px;">
-                                    <label class="calc-label" for="copayRatio"><i class="fa-solid fa-percent"></i> 본인부담 구분</label>
-                                    <select id="copayRatio" class="calc-select">
-                                        <option value="15" selected>일반 대상자 (15%)</option>
-                                        <option value="9">감경 - 일반소득층 (9%)</option>
-                                        <option value="6">감경 - 저소득층 (6%)</option>
-                                        <option value="0">기초생활수급권자 (0%)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- ④ 합계 결과 -->
-                            <div class="calc-card-step calc-result-step">
-                                <div class="calc-step-title">
-                                    <span class="step-num">4</span> 합계
-                                </div>
-                                <div class="calc-result-table">
-                                    <div class="calc-result-row">
-                                        <span class="calc-result-label">서비스 단가</span>
-                                        <span class="calc-result-value" id="newUnitCost">—</span>
-                                    </div>
-                                    <div class="calc-result-row">
-                                        <span class="calc-result-label">공단 부담금 <small>(85%)</small></span>
-                                        <span class="calc-result-value" id="newGovCost">—</span>
-                                    </div>
-                                    <div class="calc-result-row highlight-row">
-                                        <span class="calc-result-label"><strong>본인 부담금</strong></span>
-                                        <span class="calc-result-value" id="newCopay" style="color: var(--color-primary); font-size: 1.2rem; font-weight: 800;">—</span>
-                                    </div>
-                                </div>
-
-                                <div class="calc-final-copay-box" style="margin-top: 16px;">
-                                    <span class="calc-final-copay-label">예상 본인부담금 <small id="copayFreqSubtext" style="font-size:0.8rem; font-weight:500; opacity:0.85; display:block; margin-top:2px;">(요양 기본 주 5회)</small></span>
-                                    <span class="calc-final-copay-value" id="outOfPocketVal">—</span>
-                                </div>
-
-                                <div class="calc-service-info-box" id="serviceInfoBox">
-                                    <i class="fa-solid fa-circle-info"></i>
-                                    <span id="serviceInfoText">서비스 횟수: 요양 기본 주 5회 (월 20회) · 목욕 기본 월 2회</span>
-                                </div>
-                            </div>
-
-                            <p class="calc-notice" style="font-size: 0.82rem; color: #718096; line-height: 1.5; margin-top: 16px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
-                                ※ 국민건강보험공단 고시 단가 기준이며, 실제 청구액은 기관 상황에 따라 다를 수 있습니다.<br>
-                                <span style="color: #e53e3e; font-weight: 600;">※ 한도액 초과 이용분은 공단 급여가 적용되지 않아 100% 본인부담입니다.</span>
-                            </p>
                         </div>
+
+                        <!-- ③ 등급 -->
+                        <div class="calc-card-step">
+                            <div class="calc-step-title">
+                                <span class="step-num">3</span> 등급
+                            </div>
+                            <div class="calc-grade-grid" id="gradeGroup">
+                                <label class="calc-grade-card" for="grade1"><input type="radio" id="grade1" name="careGrade" value="1"><span>1등급</span></label>
+                                <label class="calc-grade-card" for="grade2"><input type="radio" id="grade2" name="careGrade" value="2"><span>2등급</span></label>
+                                <label class="calc-grade-card" for="grade3"><input type="radio" id="grade3" name="careGrade" value="3"><span>3등급</span></label>
+                                <label class="calc-grade-card" for="grade4"><input type="radio" id="grade4" name="careGrade" value="4" checked><span>4등급</span></label>
+                                <label class="calc-grade-card" for="grade5"><input type="radio" id="grade5" name="careGrade" value="5"><span>5등급</span></label>
+                            </div>
+                            <div class="calc-group" style="margin-top: 16px;">
+                                <label class="calc-label" for="copayRatio"><i class="fa-solid fa-percent"></i> 본인부담 구분</label>
+                                <select id="copayRatio" class="calc-select">
+                                    <option value="15" selected>일반(15%)</option>
+                                    <option value="9">40%감경(9%)</option>
+                                    <option value="6">60%감경(6%)</option>
+                                    <option value="0">수급자(0%)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- ④ 합계 결과 -->
+                        <div class="calc-card-step calc-result-step">
+                            <div class="calc-step-title">
+                                <span class="step-num">4</span> 합계
+                            </div>
+                            <div class="calc-result-table">
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">재가급여 월 한도액 <small>(선택 등급)</small></span>
+                                    <span class="calc-result-value" id="gradeLimitDisplay" style="font-weight: 700; color: #2d3748;">—</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">한도액 기준 월 본인부담금</span>
+                                    <span class="calc-result-value" id="gradeCopayDisplay" style="font-weight: 700; color: #2b6cb0;">—</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">회당 서비스 단가</span>
+                                    <span class="calc-result-value" id="newUnitCost">—</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">회당 공단 부담금</span>
+                                    <span class="calc-result-value" id="newGovCost">—</span>
+                                </div>
+                                <div class="calc-result-row highlight-row">
+                                    <span class="calc-result-label"><strong>회당 본인 부담금</strong></span>
+                                    <span class="calc-result-value" id="newCopay" style="color: var(--color-primary); font-size: 1.2rem; font-weight: 800;">—</span>
+                                </div>
+                            </div>
+
+                            <div class="calc-final-copay-box" style="margin-top: 16px;">
+                                <span class="calc-final-copay-label">월 본인부담금 <small id="copayFreqSubtext" style="font-size:0.8rem; font-weight:500; opacity:0.85; display:block; margin-top:2px;">(요양 기본 주 5회)</small></span>
+                                <span class="calc-final-copay-value" id="outOfPocketVal">—</span>
+                            </div>
+
+                            <div class="calc-service-info-box" id="serviceInfoBox">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span id="serviceInfoText">서비스 횟수: 요양 기본 주 5회 (월 20회) · 목욕 기본 월 2회</span>
+                            </div>
+                        </div>
+
+                        <p class="calc-notice" style="font-size: 0.82rem; color: #718096; line-height: 1.5; margin-top: 16px; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+                            ※ 국민건강보험공단 고시 단가 기준이며, 실제 청구액은 기관 상황에 따라 다를 수 있습니다.<br>
+                            <span style="color: #e53e3e; font-weight: 600;">※ 한도액 초과 이용분은 공단 급여가 적용되지 않아 100% 본인부담입니다.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 간편 상담 신청 Section -->
+        <section id="consultation" class="consultation-section" style="padding: 70px 0; background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
+            <div class="container">
+                <div class="consultation-form-box" style="max-width: 780px; margin: 0 auto; background: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; padding: 40px 36px; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);">
+                    <div class="form-header" style="text-align: center; margin-bottom: 28px;">
+                        <span class="form-badge">빠른 신청</span>
+                        <h3 class="form-title" style="font-size: 1.6rem; margin-top: 6px;">간편 상담 신청</h3>
+                        <p class="form-subtitle">성함과 연락처를 남겨주시면, 담당 사회복지사가 2시간 이내에 직접 전화 드립니다.</p>
                     </div>
                     
-                    <!-- Right: Consultation Form -->
-                    <div id="consultation" class="consultation-form-box">
-                        <div class="form-header">
-                            <span class="form-badge">빠른 신청</span>
-                            <h3 class="form-title">간편 상담 신청</h3>
-                            <p class="form-subtitle">성함과 연락처를 남겨주시면, 담당 사회복지사가 2시간 이내에 직접 전화 드립니다.</p>
+                    <form id="careConsultForm" class="consult-form" novalidate>
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="userName" class="form-label">보호자 이름 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-user input-icon"></i>
+                                <input type="text" id="userName" name="userName" class="form-input" placeholder="보호자 성함을 입력해주세요." required>
+                            </div>
+                            <span class="error-msg" id="nameError">보호자 성함을 올바르게 입력해주세요.</span>
                         </div>
                         
-                        <form id="careConsultForm" class="consult-form" novalidate>
-                            <!-- Name -->
-                            <div class="form-group">
-                                <label for="userName" class="form-label">보호자 이름 <span class="required">*</span></label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-user input-icon"></i>
-                                    <input type="text" id="userName" name="userName" class="form-input" placeholder="보호자 성함을 입력해주세요." required>
-                                </div>
-                                <span class="error-msg" id="nameError">보호자 성함을 올바르게 입력해주세요.</span>
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label for="userPhone" class="form-label">연락처 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-phone input-icon"></i>
+                                <input type="tel" id="userPhone" name="userPhone" class="form-input" placeholder="예) 010-1234-5678" required>
                             </div>
-                            
-                            <!-- Phone -->
-                            <div class="form-group">
-                                <label for="userPhone" class="form-label">연락처 <span class="required">*</span></label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-phone input-icon"></i>
-                                    <input type="tel" id="userPhone" name="userPhone" class="form-input" placeholder="예) 010-1234-5678" required>
-                                </div>
-                                <span class="error-msg" id="phoneError">연락처를 형식에 맞게 입력해주세요 (예: 010-1234-5678).</span>
+                            <span class="error-msg" id="phoneError">연락처를 형식에 맞게 입력해주세요 (예: 010-1234-5678).</span>
+                        </div>
+                        
+                        <!-- Elderly Age -->
+                        <div class="form-group">
+                            <label for="elderlyAge" class="form-label">어르신 연령대 <span class="required">*</span></label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-cake-candles input-icon"></i>
+                                <select id="elderlyAge" name="elderlyAge" class="form-select" required>
+                                    <option value="" disabled selected>어르신의 연령대를 선택해 주세요</option>
+                                    <option value="60">65세 미만 (노인성 질환 보유)</option>
+                                    <option value="65">65세 ~ 74세</option>
+                                    <option value="75">75세 ~ 84세</option>
+                                    <option value="85">85세 이상</option>
+                                </select>
                             </div>
-                            
-                            <!-- Elderly Age -->
-                            <div class="form-group">
-                                <label for="elderlyAge" class="form-label">어르신 연령대 <span class="required">*</span></label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-cake-candles input-icon"></i>
-                                    <select id="elderlyAge" name="elderlyAge" class="form-select" required>
-                                        <option value="" disabled selected>어르신의 연령대를 선택해 주세요</option>
-                                        <option value="60">65세 미만 (노인성 질환 보유)</option>
-                                        <option value="65">65세 ~ 74세</option>
-                                        <option value="75">75세 ~ 84세</option>
-                                        <option value="85">85세 이상</option>
-                                    </select>
-                                </div>
-                                <span class="error-msg" id="ageError">어르신의 연령대를 선택해 주세요.</span>
-                            </div>
-                            
-                            <!-- Needs Selection (Radio/Checkbox) -->
-                            <div class="form-group">
-                                <label class="form-label">필요한 서비스 선택 (중복 선택 가능)</label>
-                                <div class="checkbox-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" name="services" value="방문요양" checked>
-                                        <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
-                                        방문요양 서비스
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" name="services" value="방문목욕">
-                                        <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
-                                        방문목욕 서비스
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" name="services" value="등급신청">
-                                        <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
-                                        등급신청 대행 서비스
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <!-- Message -->
-                            <div class="form-group">
-                                <label for="userMessage" class="form-label">간단한 문의사항</label>
-                                <textarea id="userMessage" name="userMessage" class="form-textarea" placeholder="어르신의 현재 상태나 질환(치매, 뇌졸중 등) 또는 특이사항을 적어주시면 더 정확한 상담이 가능합니다."></textarea>
-                            </div>
-                            
-                            <!-- Privacy Policy Check -->
-                            <div class="form-group checkbox-privacy">
+                            <span class="error-msg" id="ageError">어르신의 연령대를 선택해 주세요.</span>
+                        </div>
+                        
+                        <!-- Needs Selection (Radio/Checkbox) -->
+                        <div class="form-group">
+                            <label class="form-label">필요한 서비스 선택 (중복 선택 가능)</label>
+                            <div class="checkbox-group">
                                 <label class="checkbox-label">
-                                    <input type="checkbox" id="privacyAgree" required checked>
+                                    <input type="checkbox" name="services" value="방문요양" checked>
                                     <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
-                                    개인정보 수집 및 이용 동의 (필수)
+                                    방문요양 서비스
                                 </label>
-                                <span class="error-msg" id="privacyError">개인정보 수집 및 이용에 동의하셔야 신청이 완료됩니다.</span>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="services" value="방문목욕">
+                                    <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+                                    방문목욕 서비스
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="services" value="등급신청">
+                                    <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+                                    등급신청 대행 서비스
+                                </label>
                             </div>
-                            
-                            <!-- Submit Button -->
-                            <button type="submit" class="btn-submit">
-                                <span class="btn-text"><i class="fa-solid fa-paper-plane"></i> 상담 신청하기</span>
-                                <span class="btn-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> 전송 중...</span>
-                            </button>
-                        </form>
-                    </div>
+                        </div>
+                        
+                        <!-- Message -->
+                        <div class="form-group">
+                            <label for="userMessage" class="form-label">간단한 문의사항</label>
+                            <textarea id="userMessage" name="userMessage" class="form-textarea" placeholder="어르신의 현재 상태나 질환(치매, 뇌졸중 등) 또는 특이사항을 적어주시면 더 정확한 상담이 가능합니다."></textarea>
+                        </div>
+                        
+                        <!-- Privacy Policy Check -->
+                        <div class="form-group checkbox-privacy">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="privacyAgree" required checked>
+                                <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+                                개인정보 수집 및 이용 동의 (필수)
+                            </label>
+                            <span class="error-msg" id="privacyError">개인정보 수집 및 이용에 동의하셔야 신청이 완료됩니다.</span>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn-submit">
+                            <span class="btn-text"><i class="fa-solid fa-paper-plane"></i> 상담 신청하기</span>
+                            <span class="btn-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> 전송 중...</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -944,9 +955,9 @@
                                 <li><strong>팩 스:</strong> <span id="footerFax">063-584-7073</span></li>
                                 <li><strong>이메일:</strong> <span id="footerEmail">gaon7072@naver.com</span></li>
                             </ul>
-                        </div>
-                        <div class="footer-admin-wrapper" style="margin-top: 14px; text-align: right;">
-                            <a href="#" id="adminLink" class="footer-admin-btn"><i class="fa-solid fa-user-gear"></i> 관리자 모드</a>
+                            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.15);">
+                                <a href="#" id="adminLink" class="footer-admin-btn"><i class="fa-solid fa-user-gear"></i> 관리자 모드</a>
+                            </div>
                         </div>
                     </div>
                 </div>
