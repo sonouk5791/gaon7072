@@ -620,17 +620,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const yoyangUnit = CALC_RATES.요양[parseInt(yoyangVal)] || 45750;
             const bathUnit   = CALC_RATES.목욕[bathVal] || 85400;
 
-            const yoyangGov   = Math.round(yoyangUnit * (1 - copayRate));
             const yoyangCopay = Math.round(yoyangUnit * copayRate);
+            const yoyangGov   = yoyangUnit - yoyangCopay;
 
-            const bathGov   = Math.round(bathUnit * (1 - copayRate));
             const bathCopay = Math.round(bathUnit * copayRate);
+            const bathGov   = bathUnit - bathCopay;
 
             // 월 총액: 요양 (월 N회) + 목욕 2회
             const totalMonthlyCost = (yoyangUnit * yoyangMonthlyCount) + (bathUnit * 2);
-            // 공단 부담금 계산: 한도액 내에서만 지원
-            const govContribution = Math.round(Math.min(totalMonthlyCost, limit) * (1 - copayRate));
-            const totalMonthlyCopay = totalMonthlyCost - govContribution;
+            
+            // 한도액 초과 여부 확인 및 월 본인부담금 계산 (회당 본인부담금 합계 기준)
+            const baseMonthlyCopay = (yoyangCopay * yoyangMonthlyCount) + (bathCopay * 2);
+            const overLimitCost = Math.max(0, totalMonthlyCost - limit);
+            const totalMonthlyCopay = baseMonthlyCopay + (limit > 0 ? overLimitCost : 0);
 
             if (el('newUnitCost')) el('newUnitCost').innerHTML = `요양 ${yoyangUnit.toLocaleString()}원<br>목욕 ${bathUnit.toLocaleString()}원`;
             if (el('newGovCost'))  el('newGovCost').innerHTML  = `요양 ${yoyangGov.toLocaleString()}원<br>목욕 ${bathGov.toLocaleString()}원`;
@@ -653,14 +655,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const serviceTimeVal = serviceTimeRadio ? serviceTimeRadio.value : '90';
 
             const unitCost = CALC_RATES.요양[parseInt(serviceTimeVal)] || 0;
-            const govCost  = Math.round(unitCost * (1 - copayRate));
             const copayAmt = Math.round(unitCost * copayRate);
+            const govCost  = unitCost - copayAmt;
             
             // 월 총액: 요양 (월 N회)
             const totalMonthlyCost = unitCost * yoyangMonthlyCount;
-            // 공단 부담금 계산: 한도액 내에서만 지원
-            const govContribution = Math.round(Math.min(totalMonthlyCost, limit) * (1 - copayRate));
-            const totalMonthlyCopay = totalMonthlyCost - govContribution;
+            // 한도액 초과 여부 확인 및 월 본인부담금 계산 (회당 본인부담금 합계 기준)
+            const baseMonthlyCopay = copayAmt * yoyangMonthlyCount;
+            const overLimitCost = Math.max(0, totalMonthlyCost - limit);
+            const totalMonthlyCopay = baseMonthlyCopay + (limit > 0 ? overLimitCost : 0);
 
             if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
             if (el('newGovCost'))  el('newGovCost').textContent  = govCost.toLocaleString() + '원';
@@ -687,13 +690,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const bathMonthlyCount = bathCountRadio ? parseInt(bathCountRadio.value) : 2;
 
             const unitCost = CALC_RATES.목욕[serviceTimeVal] || 0;
-            const govCost  = Math.round(unitCost * (1 - copayRate));
             const copayAmt = Math.round(unitCost * copayRate);
+            const govCost  = unitCost - copayAmt;
 
             // 선택된 횟수 기준 월 총액 계산
             const totalMonthlyCost = unitCost * bathMonthlyCount;
-            const govContribution  = Math.round(Math.min(totalMonthlyCost, limit) * (1 - copayRate));
-            const totalMonthlyCopay = totalMonthlyCost - govContribution;
+            const baseMonthlyCopay = copayAmt * bathMonthlyCount;
+            const overLimitCost = Math.max(0, totalMonthlyCost - limit);
+            const totalMonthlyCopay = baseMonthlyCopay + (limit > 0 ? overLimitCost : 0);
 
             // 단가 행
             if (el('newUnitCost')) el('newUnitCost').textContent = unitCost.toLocaleString() + '원';
@@ -719,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('label[id^="bathCount"]').forEach(l => l.classList.remove('active'));
             const parentLabel = radio.closest('label');
             if (parentLabel) parentLabel.classList.add('active');
-            calculateCopay();
+            runNewCalc();
         });
     });
 
