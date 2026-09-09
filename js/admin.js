@@ -127,8 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '2': 2331200,
             '3': 1528200,
             '4': 1409700,
-            '5': 1208900,
-            'cognitive': 658900
+            '5': 1208900
         }
     };
 
@@ -154,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('rateGrade3')) document.getElementById('rateGrade3').value = rates['3'] || 1528200;
         if (document.getElementById('rateGrade4')) document.getElementById('rateGrade4').value = rates['4'] || 1409700;
         if (document.getElementById('rateGrade5')) document.getElementById('rateGrade5').value = rates['5'] || 1208900;
-        if (document.getElementById('rateGradeCognitive')) document.getElementById('rateGradeCognitive').value = rates['cognitive'] || 658900;
     }
 
     loadCalcSettings();
@@ -180,8 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     '2': parseInt(document.getElementById('rateGrade2')?.value) || 2331200,
                     '3': parseInt(document.getElementById('rateGrade3')?.value) || 1528200,
                     '4': parseInt(document.getElementById('rateGrade4')?.value) || 1409700,
-                    '5': parseInt(document.getElementById('rateGrade5')?.value) || 1208900,
-                    'cognitive': parseInt(document.getElementById('rateGradeCognitive')?.value) || 658900
+                    '5': parseInt(document.getElementById('rateGrade5')?.value) || 1208900
                 }
             };
 
