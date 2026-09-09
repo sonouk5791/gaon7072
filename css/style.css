@@ -3322,7 +3322,7 @@ h1, h2, h3, h4 {
 
 .target-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     margin-bottom: 40px;
 }
@@ -3483,9 +3483,9 @@ h1, h2, h3, h4 {
     transform: translateY(-2px);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 992px) {
     .target-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
     }
     .target-notice-banner {
         flex-direction: column;
@@ -3496,9 +3496,6 @@ h1, h2, h3, h4 {
 @media (max-width: 640px) {
     .target-section {
         padding: 60px 0;
-    }
-    .target-grid {
-        grid-template-columns: 1fr;
     }
 }
 
