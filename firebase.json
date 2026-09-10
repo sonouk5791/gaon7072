@@ -1,0 +1,22 @@
+{
+  "hosting": {
+    "site": "gaon7072",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "AGENTS.md",
+      "WORK_LOG_*.md",
+      "WORK_SUMMARY.md",
+      "*.zip",
+      "*.lnk"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

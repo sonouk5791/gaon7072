@@ -1,2 +1,7 @@
 .vercel
 *.lnk
+.firebase/
+firebase-debug.log
+*.zip
+WORK_LOG_*.md
+WORK_SUMMARY.md
